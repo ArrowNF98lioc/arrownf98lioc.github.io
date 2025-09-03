@@ -119,6 +119,336 @@
     ul, ol {
       margin-left: 1.5rem;
     }
+    code {
+    font-family: "Fira Code", "Consolas", "Courier New", monospace;
+    font-size: 14px;  /* 调整字体大小 */
+    color: #e83e8c;   /* 设置字体颜色 */
+  }
+    
+    /* 响应式设计 - 平板设备 */
+    @media (max-width: 1024px) {
+      .content {
+        padding: 1.5rem;
+      }
+      
+      .main-title {
+        font-size: 2.5rem;
+      }
+      
+      .navbar-content {
+        padding: 0 1.5rem;
+      }
+      
+      .navbar-nav {
+        gap: 1.5rem;
+      }
+    }
+    
+    /* 响应式设计 - 移动设备 */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 0.5rem 0;
+      }
+      
+      .navbar-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0 1rem;
+      }
+      
+      .navbar-title {
+        font-size: 1rem;
+      }
+      
+      .navbar-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .navbar-nav a {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        background: rgba(0, 255, 234, 0.1);
+        border-radius: 4px;
+        border: 1px solid rgba(0, 255, 234, 0.3);
+      }
+      
+      .main-header {
+        margin-top: 140px;
+        padding: 2rem 1rem;
+      }
+      
+      .main-title {
+        font-size: 2rem;
+        line-height: 1.2;
+      }
+      
+      .main-subtitle {
+        font-size: 1rem;
+      }
+      
+      .content {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+        line-height: 1.3;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+        line-height: 1.3;
+      }
+      
+      h3 {
+        font-size: 1.3rem;
+        line-height: 1.3;
+      }
+      
+      h4 {
+        font-size: 1.1rem;
+        line-height: 1.3;
+      }
+      
+      code, pre {
+        font-size: 12px;
+        padding: 0.3rem 0.5rem;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      
+      pre {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      
+      ul, ol {
+        margin-left: 1rem;
+      }
+      
+      li {
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+    }
+    
+    /* 响应式设计 - 小屏移动设备 */
+    @media (max-width: 480px) {
+      .navbar-content {
+        padding: 0 0.5rem;
+      }
+      
+      .navbar-title {
+        font-size: 0.9rem;
+      }
+      
+      .navbar-nav {
+        gap: 0.5rem;
+      }
+      
+      .navbar-nav a {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+      }
+      
+      .main-header {
+        margin-top: 150px;
+        padding: 1.5rem 0.5rem;
+      }
+      
+      .main-title {
+        font-size: 1.6rem;
+      }
+      
+      .main-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .content {
+        padding: 0.8rem;
+      }
+      
+      h1 {
+        font-size: 1.6rem;
+      }
+      
+      h2 {
+        font-size: 1.4rem;
+      }
+      
+      h3 {
+        font-size: 1.2rem;
+      }
+      
+      h4 {
+        font-size: 1rem;
+      }
+      
+      code, pre {
+        font-size: 11px;
+        padding: 0.2rem 0.4rem;
+      }
+      
+      ul, ol {
+        margin-left: 0.8rem;
+      }
+      
+      li {
+        margin-bottom: 0.4rem;
+      }
+    }
+    
+    /* 响应式设计 - 超小屏设备 */
+    @media (max-width: 360px) {
+      .navbar-title {
+        font-size: 0.8rem;
+      }
+      
+      .navbar-nav a {
+        font-size: 0.65rem;
+        padding: 0.3rem;
+      }
+      
+      .main-title {
+        font-size: 1.4rem;
+      }
+      
+      .main-subtitle {
+        font-size: 0.8rem;
+      }
+      
+      .content {
+        padding: 0.6rem;
+      }
+      
+      h1 {
+        font-size: 1.4rem;
+      }
+      
+      h2 {
+        font-size: 1.2rem;
+      }
+      
+      h3 {
+        font-size: 1.1rem;
+      }
+      
+      h4 {
+        font-size: 0.9rem;
+      }
+      
+      code, pre {
+        font-size: 10px;
+      }
+    }
+    
+    /* 横屏模式优化 */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .navbar {
+        padding: 0.3rem 0;
+      }
+      
+      .main-header {
+        margin-top: 80px;
+        padding: 1.5rem 2rem;
+      }
+      
+      .main-title {
+        font-size: 2rem;
+        margin: 0 0 0.5rem 0;
+      }
+      
+      .main-subtitle {
+        font-size: 1rem;
+      }
+    }
+    
+    /* 高分辨率屏幕优化 */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .navbar {
+        border-bottom-width: 1px;
+      }
+      
+      code, pre {
+        border-radius: 2px;
+      }
+    }
+    
+    /* 打印样式 */
+    @media print {
+      .navbar,
+      canvas#starfield {
+        display: none;
+      }
+      
+      .main-header {
+        margin-top: 0;
+        background: none;
+        border: none;
+      }
+      
+      .content {
+        max-width: none;
+        padding: 0;
+      }
+      
+      body {
+        background: white;
+        color: black;
+      }
+      
+      h1, h2, h3, h4 {
+        color: black;
+        text-shadow: none;
+      }
+      
+      code, pre {
+        background: #f5f5f5;
+        color: #333;
+        border: 1px solid #ddd;
+      }
+    }
+    
+    /* 无障碍性改进 */
+    @media (prefers-reduced-motion: reduce) {
+      .navbar-nav a {
+        transition: none;
+      }
+      
+      canvas#starfield {
+        animation: none;
+      }
+    }
+    
+    /* 高对比度模式 */
+    @media (prefers-contrast: high) {
+      .navbar {
+        background: rgba(0, 0, 0, 1);
+        border-bottom: 3px solid #00ffea;
+      }
+      
+      .navbar-nav a {
+        color: white;
+        border: 2px solid #00ffea;
+      }
+      
+      .navbar-nav a:hover {
+        background: #00ffea;
+        color: black;
+      }
+      
+      code, pre {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid #00ffea;
+      }
+    }
   </style>
 </head>
 <body>
@@ -129,12 +459,12 @@
     <div class="navbar-content">
       <h1 class="navbar-title">Procedural Planet</h1>
       <ul class="navbar-nav">
-        <li><a href="#terrian">Terrain</a></li>
-        <li><a href="#shader">Shader</a></li>
-        <li><a href="#tools">Tools</a></li>
-        <li><a href="#postprocess">Postprocess</a></li>
-        <li><a href="#debugging">Debugging</a></li>
-      </ul>
+        <a href="#terrian">Terrain</a>
+        <a href="#shader">Shader</a>
+        <a href="#tools">Tools</a>
+        <a href="#postprocess">Postprocess</a>
+        <a href="#debugging">Debugging</a>
+      
     </div>
   </nav>
   
@@ -149,11 +479,86 @@
       <h1>Terrain Generation</h1>
       
       <h2 id="basic-code-logic">Basic Code Logic (CatLikeCoding)</h2>
+      <p>In this project, I originally used this <a href="https://catlikecoding.com/unity/tutorials/pseudorandom-surfaces/spherical-elevation/" target="_blank">Procedural Surfaces project of CatLikeCoding</a> It contains the basic noise and how to generate the planet by a single layer of noise. </p>
       
       <h2 id="noise-combination">Noise Combination</h2>
       
       <h3 id="what-this-job-does">What this job does (high level)</h3>
-      <p><code>CombinedSurfaceJob</code> is a Burst-compiled <code>IJobFor</code> that procedurally displaces a mesh surface by <strong>stacking multiple noise layers</strong> and then <strong>recomputing normals/tangents</strong> per vertex quad. It supports both <strong>planes</strong> and <strong>spheres</strong> with correct derivatives for shading. A pair of global controls—<strong><code>minHeight</code></strong> and <strong><code>elevation</code></strong>—constrain/scale the final displacement.</p> <h3 id="data-layout-execution-model">Data layout &amp; execution model</h3> <ul> <li>The mesh is authored/processed in <strong>quads of 4 vertices</strong>. Each iteration <code>i</code> of the job reads/writes one <code>Vertex4</code>:<ul> <li><code>Vertex4</code> groups four <code>SingleStream.Stream0</code> structs: <code>v0…v3</code> (position, normal, tangent, etc.).</li> <li>The job obtains a typed view over the vertex buffer via<br> <code>meshData.GetVertexData&lt;SingleStream.Stream0&gt;().Reinterpret&lt;Vertex4&gt;(16 * 4)</code>.<ul> <li><code>16</code> is the size (in bytes) of one <code>SingleStream.Stream0</code> lane written four times per quad → <strong>64 bytes stride</strong>.</li> </ul> </li> </ul> </li> <li>The job is scheduled with: <code>ScheduleParallel(meshData.vertexCount / 4, resolution, dependency)</code> so the <strong>work count equals the number of quads</strong>.<h3 id="inputs">Inputs</h3> </li> <li><strong>Vertices buffer</strong> (writable) as <code>NativeArray&lt;Vertex4&gt;</code>.</li> <li><strong>Noise layers</strong> as <code>NativeArray&lt;NoiseLayerData&gt;</code>, copied from managed array and disposed after completion.</li> <li><strong>Domain transform</strong> (<code>SpaceTRS</code>):<ul> <li><code>domainTRS</code> (3×4) to transform positions into noise space.</li> <li><code>derivativeMatrix</code> (3×3) available for derivative mapping (here the code builds its own <code>domainMatrix</code> from <code>domainTRS</code>).</li> </ul> </li> <li><strong>Switches/scalars</strong>:<ul> <li><code>isPlane</code> — selects plane or sphere displacement path.</li> <li><code>minHeight</code> — clamps the <strong>final</strong> combined noise value.</li> <li><code>elevation</code> — global multiplier for per-layer displacement and derivatives; if <code>0</code>, derivatives are zeroed to yield a flat surface.<h3 id="layer-model-blending">Layer model &amp; blending</h3> Each enabled <code>NoiseLayerData</code> contributes a <code>Sample4</code> (value + x/y/z derivatives for the 4 vertices in the quad). The flow per layer:</li> </ul> </li> <li><strong>Sample base noise</strong><br> Depending on <code>noiseType</code>, the job calls one of:<ul> <li><code>Lattice3D&lt;LatticeNormal, Perlin&gt;</code></li> <li><code>Lattice3D&lt;LatticeNormal, Smoothstep&lt;Turbulence&lt;Perlin&gt;&gt;&gt;</code></li> <li><code>Lattice3D&lt;LatticeNormal, Value&gt;</code></li> <li><code>Simplex3D&lt;Simplex|Smoothstep&lt;Turbulence&lt;Simplex&gt;&gt;|Value&gt;</code></li> <li><code>Voronoi3D&lt;… Worley/SmoothWorley/Chebyshev … F1/F2/F2MinusF1&gt;</code> All calls use <strong>the transformed positions</strong> (float3×4) and the layer’s <code>noiseSettings</code> (frequency, octaves, lacunarity, persistence, seed, etc.).</li> </ul> </li> <li><strong>Apply displacement scale &amp; elevation</strong><br> <code>layerNoise *= layer.noiseSettings.displacement * elevation</code>.<ul> <li>If <code>elevation == 0</code>, <strong>all derivatives are forced to 0</strong> for stability (flat normals/tangents).</li> </ul> </li> <li><strong>Compute spatial weight</strong><br> Per-layer contribution is modulated by a <strong>procedural weight</strong> from <code>NoiseLayerData.GetWeight(position)</code>(increased diversity compared to the original version):<ul> <li>Weight uses Perlin on (x,z) scaled by <code>weightFrequency</code> and mixes in a hash seeded by <code>noiseSettings.seed</code>.</li> <li>The final weight is remapped to <code>[weightMin, weightMax]</code>.</li> </ul> </li> <li><strong>Accumulate</strong><br> Weighted values and derivatives are <strong>summed</strong> into a single <code>combinedNoise</code> for the quad: <code>combined.v += layerNoise.v * weight combined.dx += layerNoise.dx * weight combined.dy += layerNoise.dy * weight combined.dz += layerNoise.dz * weight</code></li> <li><strong>Global clamp</strong><br> After all layers: <code>combined.v = max(combined.v, minHeight)</code>.<h3 id="applying-the-displacement-plane-vs-sphere-">Applying the displacement (plane vs. sphere)</h3> <h4 id="plane-path-setplanevertices-">Plane path (<code>SetPlaneVertices</code>)</h4> </li> <li><strong>Displacement:</strong> write <code>noise.v</code> directly into each vertex’s <strong>y</strong> component.</li> <li><strong>Normals:</strong> derived from <code>dx, dz</code> using analytic formula<br> <code>normal = normalize( (-dx, 1, -dz) )</code>.</li> <li><strong>Tangents:</strong> build from <code>dx</code> (no z-slope contribution), with handedness <code>w = -1</code>. This yields consistent shading for height-mapped planes.<h4 id="sphere-path-setspherevertices-">Sphere path (<code>SetSphereVertices</code>)</h4> </li> <li><strong>Radial displacement:</strong><br> Values are shifted by <code>+1</code> (so <code>1</code> means the un-displaced radius); derivatives are normalized by <code>v</code> to be <strong>relative to the sphere radius</strong>: <code>noise.v += 1 noise.dx /= noise.v noise.dy /= noise.v noise.dz /= noise.v</code></li> <li><strong>Tangent update (if preexisting tangents are nonzero):</strong><br> The code computes how tangents change with displacement (<code>td</code>) and re-orthonormalizes with <code>NormalizeRows()</code>. Handedness is set to <code>-1</code>.</li> <li><strong>Normals:</strong><br> Derived from displaced position <code>p</code> and the parametric derivatives; the code constructs a matrix whose rows are normalized to recover <strong>unit normals per vertex</strong>.</li> <li><strong>Positions:</strong><br> Each position is <strong>scaled radially</strong> by <code>noise.v</code> (per-vertex <code>x/y/z</code> kept in direction; length scaled). This preserves smooth shading on spherical meshes with analytic normals/tangents that reflect the displacement field.<h3 id="elevation-minheight-semantics">Elevation &amp; minHeight semantics</h3> </li> <li><code>elevation</code> is a <strong>global gain</strong> applied to every layer’s <code>displacement</code>. It scales both <strong>height</strong> and <strong>derivatives</strong>. Setting it to <code>0</code> collapses all variation (positions become base shape; normals/tangents are flattened accordingly).</li> <li><code>minHeight</code> is a <strong>post-blend clamp</strong> on the <strong>combined</strong> scalar value. On planes it clamps height; on spheres (after shifting by <code>+1</code>) it effectively enforces a <strong>minimum radial scale</strong> once the value is added to 1.<h3 id="scheduling-lifetime">Scheduling &amp; lifetime</h3> </li> <li><code>ScheduleParallel</code> packs all parameters, creates the <code>NativeArray&lt;NoiseLayerData&gt;</code>, and returns the <code>JobHandle</code>.</li> <li>Disposal of the <code>noiseLayers</code> native array is chained to the returned handle.</li> <li>Upstream (<code>ProceduralSurface.GenerateMesh</code>), the caller completes the handle, applies mesh data, and optionally recalculates (or uses the job’s) normals/tangents and generates vertex colors.<h3 id="vertex-colors-context-">Vertex colors (context)</h3> Although not part of <code>CombinedSurfaceJob</code>, <code>ProceduralSurface</code> can run a separate <strong><code>ColorJob</code></strong> afterwards:</li> <li>Computes a <strong>height</strong> on the sphere from radial distance (normalized to <code>[-1, 1]</code> using base radius ± max displacement).</li> <li>Computes <strong>slope</strong> as the angle between vertex normal and world up.</li> <li>Evaluates a list of <strong>color rules</strong> (height/slope/noise/latitude/blend) and writes <code>mesh.colors</code>. This decouples <strong>geometry generation</strong> (this job) from <strong>appearance classification</strong> (color job).<h3 id="performance-correctness-notes">Performance &amp; correctness notes</h3> </li> <li><strong>Burst + IJobFor:</strong> SIMD-friendly loops over quads; good cache behavior.</li> <li><strong>Derivatives:</strong> Carry through the entire pipeline, enabling <strong>analytical normals/tangents</strong> and avoiding expensive post-processing, especially for spheres.</li> <li><strong>Weights per vertex:</strong> <code>GetWeight</code> currently samples 2D Perlin on <code>(x,z)</code> of <strong>v0 position</strong> for the quad. If you want per-vertex weights, adjust to sample each vertex.</li> <li><strong>Reinterpret stride:</strong> Ensure the stride passed to <code>Reinterpret&lt;Vertex4&gt;(…)</code> matches the actual bytes per quad. Here it’s <strong>64 bytes</strong> (<code>16 * 4</code>). A mismatch leads to errors like “expected X but is Y bytes”.</li> <li><strong>Elevation\==0 fast path:</strong> Zeroing derivatives prevents NaNs and keeps shading stable when flattening the surface.<h4 id="extending-the-system">Extending the system</h4> </li> <li><strong>Custom layer masks:</strong> Sample <code>GetWeight</code> in 3D space, or incorporate latitude/slope into weights.</li> <li><strong>Domain derivatives:</strong> If your <code>SpaceTRS</code> can skew/rotate, you may map derivatives via <code>derivativeMatrix</code> to account for anisotropic domains.</li> <li><strong>LOD / tiles:</strong> Partition the mesh and schedule multiple jobs; combine with culling.</li> <li><strong>Signed displacement on spheres:</strong> If you want depressions below the base radius, remap <code>noise.v</code> around <code>0</code> (e.g., <code>radius = base + disp</code>) instead of the current <code>+1</code> normalization.<h4 id="typical-usage-from-proceduralsurface-">Typical usage (from <code>ProceduralSurface</code>)</h4> </li> <li>Build <code>NoiseLayerData[]</code> from enabled <code>NoiseLayer</code> components.</li> <li>Call: <code>CombinedSurfaceJob.ScheduleParallel( meshData, resolution, activeLayers, domain, isPlane: meshType &lt; MeshType.CubeSphere, minHeight, elevation, dependency: meshJobs[(int)meshType]( mesh, meshData, resolution, default, Vector3.one * GetMaxDisplacement(), true ) )</code></li> <li>Complete handle, apply mesh, optionally recalc normals/tangents (not strictly needed for planes/spheres here), generate vertex colors, and run mesh optimizations.<h3 id="in-one-sentence">In one sentence</h3> <strong><code>CombinedSurfaceJob</code> procedurally deforms plane/sphere meshes by stacking weighted noise layers with analytic derivatives, then writes consistent positions, normals, and tangents per vertex quad—scalable via <code>elevation</code>, clamped by <code>minHeight</code>, and ready for downstream color classification.</strong><h3 id="comparison">Comparison</h3> </li> <li>The planet with one layer：Having the basic terrian shape but cannot implement more complex terrians ![[Pasted image 20250901003157.png]]</li> <li>The planet with muliple layers: support much more details ![[Pasted image 20250901003228.png]]<h1 id="shader">Shader</h1> <h2 id="vertex-color">Vertex Color</h2> In my implementation, I directly <strong>assign vertex colors in C# during mesh generation</strong> (<code>GenerateVertexColors</code> inside <code>ProceduralSurface</code>). This means the vertex buffer already contains a per-vertex <code>Color</code> attribute when passed into the GPU.</li> </ul> <p>Thanks to this, in Shader Graph I can simply sample the <strong><code>Vertex Color</code> node</strong> instead of recomputing terrain classification in the shader. This provides two major benefits:</p> <li><strong>Performance</strong> – all classification (height/slope/noise/latitude/blend) is done once on the CPU in jobs, rather than per-pixel on the GPU.</li> <li><strong>Flexibility</strong> – I can freely author color rules and see them directly baked into the mesh.<h2 id="color-rules">Color Rules</h2> The logic is rule-driven:</li> <li>Each <strong>ColorRule</strong> defines:<ul> <li>The condition (Height / Slope / Noise / Latitude / Blend).</li> <li>Two possible colors (<code>color1</code>, <code>color2</code>).</li> <li>A blending curve or interpolation strategy.</li> </ul> </li> <li>During mesh generation, the active rules are evaluated in a <strong>parallel job</strong> (<code>ColorJob</code>).</li> <li>Each vertex color is decided by applying the rules in sequence and then blending results.<h3 id="pseudo-code">Pseudo-code</h3> <pre><code><span class="hljs-keyword">for</span> each vertex v: <span class="hljs-built_in">height</span> = normalize(v.<span class="hljs-built_in">position</span>.magnitude) // <span class="hljs-keyword">or</span> y <span class="hljs-keyword">for</span> plane slope = angle(normal[v], up) <span class="hljs-built_in">color</span> = white <span class="hljs-keyword">for</span> each rule r <span class="hljs-keyword">in</span> colorRules: <span class="hljs-built_in">factor</span> = r.Evaluate(<span class="hljs-built_in">height</span>, slope, v.<span class="hljs-built_in">position</span>, v.normal) candidateColor = Lerp(r.color1, r.color2, <span class="hljs-built_in">factor</span>) <span class="hljs-built_in">color</span> = Blend(<span class="hljs-built_in">color</span>, candidateColor, r.weight, r.blendMode) v.<span class="hljs-built_in">color</span> = <span class="hljs-built_in">color</span> </code></pre><h2 id="implemented-rules">Implemented Rules</h2> <h3 id="1-height-most-common-">1. Height (most common)</h3> </li> <li>Define ranges of elevation that map to different biomes.</li> <li>Perfect for terrain-like distribution: e.g., ocean → beach → plain → mountain → snow.</li> <li><strong>Preset Earth/Ice palettes are entirely generated by this rule.</strong> <code>factor = InverseLerp(minHeight, maxHeight, height); factor = heightCurve.Evaluate(factor); color = Lerp(color1, color2, factor);</code><h3 id="2-noise">2. Noise</h3> </li> <li>Splits areas according to a noise function (Perlin in this case, and also supporting other 13 kinds of noises).</li> <li>Produces patchy, irregular patterns (e.g., moss vs. soil, craters vs. flatlands).</li> <li>Reuses the <strong>same noise function as terrain generation</strong>, ensuring consistency.</li> <li><strong>Used for Martian lowlands.</strong><pre><code><span class="hljs-attribute">factor</span> = PerlinNoise(position.x * noiseScale, position.z * noiseScale); <span class="hljs-attribute">c</span><span class="hljs-attribute">o</span><span class="hljs-attribute">l</span><span class="hljs-attribute">o</span><span class="hljs-attribute">r</span> = Lerp(color1, color2, factor); </code></pre><h3 id="3-slope">3. Slope</h3> </li> <li>Classifies areas by steepness angle.</li> <li>Useful for distinguishing cliffs vs. flat fields (e.g., add darker rock colors on slopes).<pre><code><span class="hljs-attribute">factor</span> = InverseLerp(minSlope, maxSlope, slope); <span class="hljs-attribute">c</span><span class="hljs-attribute">o</span><span class="hljs-attribute">l</span><span class="hljs-attribute">o</span><span class="hljs-attribute">r</span> = Lerp(color1, color2, factor); </code></pre><h3 id="4-latitude">4. Latitude</h3> </li> <li>Computes latitude by normalizing Y-axis in [-1, 1].</li> <li>Produces banded gradients (like polar caps, equatorial forests).<pre><code><span class="hljs-attribute">factor</span> = InverseLerp(-1f, 1f, position.y); <span class="hljs-attribute">color</span> = Lerp(color1, color2, factor); </code></pre><h3 id="5-blend">5. Blend</h3> </li> <li>A flexible “catch-all” rule.</li> <li>Allows arbitrary mixing of two colors using a given blend mode (Add, Multiply, Overlay, Screen, SoftLight).</li> <li>Useful when combining multiple biome colors smoothly.<pre><code><span class="hljs-title">factor</span> = <span class="hljs-number">0.5</span>f; // <span class="hljs-keyword">default</span> blend color = <span class="hljs-type">Blend</span>(<span class="hljs-title">baseColor</span>, <span class="hljs-type">Lerp</span>(<span class="hljs-title">color1</span>, <span class="hljs-title">color2</span>, <span class="hljs-title">factor</span>), weight, blendMode); </code></pre><h2 id="color-blender">Color Blender</h2> All rules can contribute sequentially. The <code>BlendColors</code> method defines how one rule’s result interacts with the current accumulated color:</li> <li><strong>Add</strong>: brightens by summation.</li> <li><strong>Multiply</strong>: darkens / applies masks.</li> <li><strong>Overlay / Screen / SoftLight</strong>: common artistic blends from image editing, enabling smoother variation. This layering system adds <strong>diversity on top of the original height-only system</strong>, so the results are not repetitive but varied, even across similar terrains.<h2 id="material-adjustments-for-water-ice">Material Adjustments for Water &amp; Ice</h2> To further refine the visual output, I also adjust <strong>PBR material properties</strong> based on vertex color:</li> <li>When a vertex is classified as <strong>blue</strong> (ice/snow/water), I increase:<ul> <li><strong>Metallic</strong> → simulates reflective wet/icy surface.</li> <li><strong>Smoothness</strong> → simulates glossy highlights. This provides a simple but effective way to distinguish solid ground from liquid or frozen surfaces without extra textures.<h2 id="key-advantages">Key Advantages</h2> </li> </ul> </li> <li><strong>CPU precomputation</strong>: expensive classification (noise, slope, latitude) is not recalculated in the shader.</li> <li><strong>Direct Shader Graph integration</strong>: simply plug in the <em>Vertex Color</em> node.</li> <li><strong>Biome flexibility</strong>: easy to define Earth-like, Mars-like, or fantasy planet palettes by authoring different rules.</li> <li><strong>Extra realism</strong>: metallic/smoothness adjustment on water/ice adds material-based realism beyond color.<h2 id="preset">Preset</h2> <h3 id="earth">Earth</h3> [PNG]<h3 id="mars">Mars</h3> [PNG]<h3 id="ice">Ice</h3> [PNG]<h1 id="tools">Tools</h1> <h2 id="noisevisualizer2d">NoiseVisualizer2D</h2> [PNG]<h3 id="purpose">Purpose</h3> <code>NoiseVisualizer2D</code> is a custom <strong>Unity EditorWindow</strong> that allows interactive <strong>2D visualization of noise layers</strong> defined in a <code>ProceduralSurface</code>.<br>Its main goal is to provide <strong>real-time previews</strong> of how each noise layer (or their combination) looks in 2D space, which helps with debugging, fine-tuning, and authoring procedural terrains.<h3 id="key-features">Key Features</h3> </li> <li><strong>Integration with ProceduralSurface</strong><ul> <li>The window targets a <code>ProceduralSurface</code> instance and directly inspects its private <code>noiseLayers</code> field (via reflection).</li> <li>Supports visualization of all noise types implemented in <code>ProceduralSurface.NoiseType</code>.</li> </ul> </li> <li><strong>2D Texture Preview</strong><ul> <li>Noise values are sampled into a <code>Texture2D</code> grid (<code>previewTexture</code>).</li> <li>Each pixel corresponds to a <code>(x, z)</code> position mapped into noise space.</li> <li>Noise values are normalized into <code>[0, 1]</code> and remapped into colors via <code>Color.Lerp(lowColor, highColor)</code>.</li> </ul> </li> <li><strong>Layer Control</strong><ul> <li>Lists all noise layers in the target surface.</li> <li>Allows toggling layers on/off.</li> <li>Clicking <strong>Preview</strong> generates a single-layer preview.</li> <li>Clicking <strong>Show All Layers</strong> generates a weighted combined preview of all enabled layers.</li> </ul> </li> <li><strong>Combined Preview with Noise-Modulated Weights</strong><ul> <li>Each layer’s contribution is scaled by its weight, which itself can be <strong>noise-modulated</strong> (via <code>NoiseLayer.GetWeight</code>).</li> <li>For the combined preview:<ul> <li>The system first computes <code>totalWeight</code> across all enabled layers.</li> <li>Each layer’s noise sample is then weighted proportionally.</li> <li>This produces a blended 2D noise map that matches the <strong>actual runtime blending in CombinedSurfaceJob</strong>.</li> </ul> </li> </ul> </li> <li><strong>Interactive Navigation</strong><ul> <li><strong>Zoom</strong>: scroll wheel or slider (0.2× to 2×).</li> <li><strong>Pan</strong>: right-click drag.</li> <li><strong>Reset View</strong>: quick button to reset zoom/pan.</li> </ul> </li> <li><strong>Customization</strong><ul> <li>User-defined low/high colors (default black→white) to highlight noise contrast.</li> <li>Preview resolution adjustable (<code>previewSize = 256</code>)<h3 id="workflow">Workflow</h3> </li> </ul> </li> <li><strong>Open the Tool</strong><ul> <li>Available via Unity menu: <code>Window → Noise Visualizer 2D</code>.</li> </ul> </li> <li><strong>Select Target Surface</strong><ul> <li>Assign a <code>ProceduralSurface</code> instance in the window.</li> <li>The editor automatically extracts its noise layers.</li> </ul> </li> <li><strong>Preview Noise</strong><ul> <li>Click a layer’s <strong>Preview</strong> button to visualize only that layer.</li> <li>Click <strong>Show All Layers</strong> to preview the combined effect.</li> </ul> </li> <li><strong>Adjust View</strong><ul> <li>Use zoom and pan to focus on details.</li> <li>Change color gradient to better distinguish low vs. high regions.<h3 id="implementation-details">Implementation Details</h3> <h4 id="generating-a-layer-preview">Generating a Layer Preview</h4> For each pixel <code>(x, y)</code> in the preview texture:</li> </ul> </li> <li>Map coordinates into noise space (scaled &amp; offset by zoom/pan).</li> <li>Call <code>GenerateNoiseValue(layer, position)</code>:<ul> <li>Dispatch to the correct noise generator (Perlin, Simplex, Voronoi, etc.) using <code>switch</code> on <code>layer.noiseType</code>.</li> <li>Use the layer’s <code>noiseSettings</code> (seed, frequency, displacement).</li> <li>Normalize result via <code>Mathf.InverseLerp(-0.5, 0.5, noiseValue)</code>.</li> </ul> </li> <li>Map the normalized value into <code>[lowColor, highColor]</code>.<h4 id="generating-a-combined-preview">Generating a Combined Preview</h4> </li> <li>For each pixel, compute weights via <code>layer.GetWeight(position)</code>.</li> <li>Normalize weights by dividing each by <code>totalWeight</code>.</li> <li>For each enabled layer:<ul> <li>Sample noise value at <code>(x, z)</code>.</li> <li>Multiply by normalized weight.</li> <li>Accumulate into <code>combinedNoise</code>.</li> </ul> </li> <li>Clamp with <code>minHeight</code> from the target surface.</li> <li>Map to <code>[lowColor, highColor]</code>.<h3 id="benefits">Benefits</h3> </li> <li><strong>Debugging aid</strong>: You can see exactly what each noise layer looks like before applying it to the 3D mesh.</li> <li><strong>Authoring tool</strong>: Makes tuning frequencies, octaves, persistence, etc. much easier.</li> <li><strong>Consistency</strong>: Uses the same noise implementations as <code>CombinedSurfaceJob</code>, so the previews match runtime results.</li> <li><strong>Interactivity</strong>: Zoom, pan, and layer toggle give fine control.<h3 id="in-one-sentence">In one sentence</h3> <strong><code>NoiseVisualizer2D</code> is an interactive Unity Editor tool that renders 2D previews of <code>ProceduralSurface</code> noise layers—individually or combined with noise-modulated weights—providing immediate visual feedback for procedural terrain authoring.</strong><h2 id="proceduralsurfaceeditor">ProceduralSurfaceEditor</h2> <h3 id="purpose">Purpose</h3> <code>ProceduralSurfaceEditor</code> is a <strong>Unity Custom Inspector</strong> for the <code>ProceduralSurface</code> component.<br>Instead of relying on Unity’s default inspector, this editor provides <strong>structured UI controls</strong> for noise layers, color rules, and vertex color presets, making it easier to author procedural terrains. [PNG]<h3 id="key-features">Key Features</h3> <h4 id="1-noise-layers-management">1. Noise Layers Management</h4> </li> <li><strong>Add / Remove Layers</strong>:<br> The inspector shows a numeric input (layer count) and “+” button to add new layers.</li> <li><strong>Renaming</strong>:<br> Each layer can be renamed via an inline edit field (with pencil icon toggle).</li> <li><strong>Enable / Disable</strong>:<br> Each layer has a toggle to control whether it contributes to the mesh.</li> <li><strong>Category Selection</strong>:<br> Each layer has a <code>category</code> dropdown (Base, Mountain, Detail, Volcano, etc.).</li> <li><strong>Foldout UI</strong>:<br> Clicking the arrow expands the layer, showing editable properties (noise type, settings, weights, etc.).</li>  <p>This structured layout replaces Unity’s generic property drawer and gives fine-grained control per noise layer.</p> <h4 id="2-color-rules-management">2. Color Rules Management</h4> <ul> <li><strong>Add / Remove Rules</strong>:<br> Similar to noise layers, rules can be added by number field or “+” button.</li> <li><strong>Renaming</strong>:<br> Inline editing for rule names with pencil icon toggle.</li> <li><strong>Enable / Disable</strong>:<br> Toggle to activate or deactivate each rule.</li> <li><strong>Foldout UI with Context-Specific Fields</strong>:<ul> <li><strong>Height Rule</strong>: min/max height + curve.</li> <li><strong>Slope Rule</strong>: min/max slope + curve.</li> <li><strong>Noise Rule</strong>: noise type, noise settings, noise scale.</li> <li><strong>Latitude Rule</strong>: latitude blend parameter.</li> <li><strong>Blend Rule</strong>: blend mode and weight.</li> </ul> </li> <li><strong>Color Fields</strong>: each rule has two colors (<code>color1</code>, <code>color2</code>) and a blend curve. This enables precise biome-style classification (ocean, beach, mountain, snow, etc.) directly in the inspector.<h4 id="3-vertex-color-system-settings">3. Vertex Color System Settings</h4> </li> <li>Global toggle <strong>“Generate Vertex Colors”</strong>.</li> <li>Info box reminding user to use a <code>Custom/VertexColor</code> shader for visualization.</li> <li>Preset buttons:<ul> <li><strong>Add Earth Preset</strong> → Adds 5 rules (Ocean, Beach, Plain, Mountain, Snow).</li> <li><strong>Add Mars Preset</strong> → Adds 3 rules (Lowland, Highland, Peak).</li> <li><strong>Add Ice Preset</strong> → Adds 3 rules (Ocean, Ice Plain, Iceberg). These presets give quick starting points for different planet themes.<h4 id="4-other-fields">4. Other Fields</h4> The inspector also exposes the main parameters of <code>ProceduralSurface</code>:</li> </ul> </li> <li>Mesh type (grid, sphere, icosphere, etc.).</li> <li>Recalculate normals/tangents toggles.</li> <li>Mesh optimization mode.</li> <li>Resolution.</li> <li>Global settings (minHeight, elevation, domain transform).</li> <li>Gizmo settings.</li> <li>Material mode and assigned materials. This ensures all relevant parameters are editable in one place.<h3 id="workflow">Workflow</h3> </li> <li>Attach <code>ProceduralSurface</code> to a GameObject.</li> <li>Open the Inspector: instead of Unity’s default UI, you get the custom <code>ProceduralSurfaceEditor</code>.</li> <li>Add noise layers and tweak their settings.</li> <li>Add color rules (or apply Earth/Mars/Ice presets).</li> <li>Enable <strong>Generate Vertex Colors</strong> and assign a <code>Custom/VertexColor</code> material.</li> <li>Adjust global mesh settings (resolution, elevation, optimization).</li> <li>The procedural mesh regenerates automatically when parameters are changed.<h3 id="why-not-use-unity-s-default-inspector-">Why Not Use Unity’s Default Inspector?</h3> Although Unity automatically exposes serialized fields, the default inspector is <strong>not practical</strong> for a system as complex as procedural terrain:</li> <li><strong>Raw Lists Are Unintuitive</strong><ul> <li>Noise layers and color rules appear as plain arrays.</li> <li>Adding/removing elements is slow, and renaming requires typing into hidden string fields.</li> </ul> </li> <li><strong>No Context-Aware Editing</strong><ul> <li>The default inspector shows <em>all fields</em>, even if they don’t apply.</li> <li>Example: slope parameters appear even when the rule type is “Height,” creating confusion.</li> <li>The custom editor hides irrelevant fields, showing only what matters.</li> </ul> </li> <li><strong>No Presets for Common Worlds</strong><ul> <li>Artists often want “Earth-like,” “Mars-like,” or “Ice-world” palettes.</li> <li>Default inspector forces manual setup of many fields.</li> <li>Custom inspector adds one-click <strong>Earth/Mars/Ice presets</strong>, saving minutes of repetitive work.</li> </ul> </li> <li><strong>Poor Scalability</strong><ul> <li>With many noise layers and rules, the default inspector becomes a wall of fields.</li> <li>The custom inspector uses foldouts, inline renaming, and toggles to keep the UI readable.</li> </ul> </li> <li><strong>Iteration Speed &amp; Quality of Life</strong><ul> <li>Quick enable/disable.</li> <li>Inline renaming with pencil icons.</li> <li>Delete buttons per entry.</li> <li>HelpBoxes for guidance.</li> <li>These small improvements make iteration <em>fast and safe</em>.<h3 id="in-one-sentence">In one sentence</h3> <strong><code>ProceduralSurfaceEditor</code> is a custom Unity inspector that organizes noise layers, color rules, and vertex color presets into an intuitive UI—making procedural planet authoring faster, more structured, and more artist-friendly.</strong><h1 id="postprocess-and-skybox">Postprocess and Skybox</h1> Finally, I added a global volume and changed some postprocess params to make it looks much more greater： ![[Pasted image 20250901002354.png]] ![[Pasted image 20250901002423.png]] At last, I chose a wonderdul skybox for it and make it rotating:) Hope you like this project! It might be simple but I did learn a lot.<h1 id="debugging-experience">Debugging Experience</h1> <h2 id="moebius-shader">Moebius Shader</h2> <h2 id="custom-gravity-character">Custom Gravity Character</h2> </li> </ul> </li> </ul>
+      <p>Inspired by <a href="https://www.youtube.com/watch?v=H4g-TC__cvg&list=PLFt_AvWsXl0cONs3T0By4puYy6GM22ko8&index=4" target="_blank">Sebstian Lague's procedural planet</a>, I found that the planet after combination of many layers of noises can be more detailed and able to have more possibilities. To implement the combined job, I created a <code>CombinedSurfaceJob</code>, which is a Burst-compiled <code>IJobFor</code> that procedurally displaces a mesh surface by <strong>stacking multiple noise layers</strong> and then <strong>recomputing normals/tangents</strong> per vertex quad. It supports both <strong>planes</strong> and <strong>spheres</strong> with correct derivatives for shading.</p>
+
+      <h3 id="data-layout-execution-model">Data layout &amp; execution model</h3>
+      <p>The mesh is authored/processed in <strong>quads of 4 vertices</strong>. Each iteration <code>i</code> of the job reads/writes one <code>Vertex4</code>: <code>Vertex4</code> groups four <code>SingleStream.Stream0</code> structs: <code>v0…v3</code> (position, normal, tangent, etc.). The job obtains a typed view over the vertex buffer via<br> <code>meshData.GetVertexData&lt;SingleStream.Stream0&gt;().Reinterpret&lt;Vertex4&gt;(16 * 4)</code>. <code>16</code> is the size (in bytes) of one <code>SingleStream.Stream0</code> lane written four times per quad → <strong>64 bytes stride</strong>.The job is scheduled with: <code>ScheduleParallel(meshData.vertexCount / 4, resolution, dependency)</code> so the <strong>work count equals the number of quads</strong>.</p>
+      
+      <h3 id="inputs">Inputs</h3>
+     
+     <ul>
+       <li><strong>Vertices buffer</strong> (writable) as <code>NativeArray&lt;Vertex4&gt;</code>.</li>
+       <li><strong>Noise layers</strong> as <code>NativeArray&lt;NoiseLayerData&gt;</code>, copied from managed array and disposed after completion.</li>
+       <li><strong>Domain transform</strong> (<code>SpaceTRS</code>):
+         <ul>
+           <li><code>domainTRS</code> (3×4) to transform positions into noise space.</li>
+           <li><code>derivativeMatrix</code> (3×3) available for derivative mapping (here the code builds its own <code>domainMatrix</code> from <code>domainTRS</code>).</li>
+         </ul>
+       </li>
+       <li><strong>Switches/scalars</strong>:
+         <ul>
+           <li><code>isPlane</code> — selects plane or sphere displacement path.</li>
+           <li><code>minHeight</code> — clamps the <strong>final</strong> combined noise value.</li>
+           <li><code>elevation</code> — global multiplier for per-layer displacement and derivatives; if <code>0</code>, derivatives are zeroed to yield a flat surface.</li>
+         </ul>
+       </li>
+     </ul>
+     <h3 id="layer-model-blending">Layer model &amp; blending</h3>
+      Each enabled <code>NoiseLayerData</code> contributes a <code>Sample4</code> (value + x/y/z derivatives for the 4 vertices in the quad). The flow per layer:   <strong>Sample base noise</strong><br> Depending on <code>noiseType</code>, the job calls one of: <code>Lattice3D&lt;LatticeNormal, Perlin&gt;</code> <code>Lattice3D&lt;LatticeNormal, Smoothstep&lt;Turbulence&lt;Perlin&gt;&gt;&gt;</code> <code>Lattice3D&lt;LatticeNormal, Value&gt;</code> <code>Simplex3D&lt;Simplex|Smoothstep&lt;Turbulence&lt;Simplex&gt;&gt;|Value&gt;</code> <code>Voronoi3D&lt;… Worley/SmoothWorley/Chebyshev … F1/F2/F2MinusF1&gt;</code> All calls use <strong>the transformed positions</strong> (float3×4) and the layer’s <code>noiseSettings</code> (frequency, octaves, lacunarity, persistence, seed, etc.).   <strong>Apply displacement scale &amp; elevation</strong><br> <code>layerNoise *= layer.noiseSettings.displacement * elevation</code>. If <code>elevation == 0</code>, <strong>all derivatives are forced to 0</strong> for stability (flat normals/tangents).   <strong>Compute spatial weight</strong><br> Per-layer contribution is modulated by a <strong>procedural weight</strong> from <code>NoiseLayerData.GetWeight(position)</code>(increased diversity compared to the original version): Weight uses Perlin on (x,z) scaled by <code>weightFrequency</code> and mixes in a hash seeded by <code>noiseSettings.seed</code>. The final weight is remapped to <code>[weightMin, weightMax]</code>.   <strong>Accumulate</strong><br> Weighted values and derivatives are <strong>summed</strong> into a single <code>combinedNoise</code> for the quad: <code>combined.v += layerNoise.v * weight combined.dx += layerNoise.dx * weight combined.dy += layerNoise.dy * weight combined.dz += layerNoise.dz * weight</code> <strong>Global clamp</strong><br> After all layers: <code>combined.v = max(combined.v, minHeight)</code>.
+
+      <h3 id="applying-the-displacement-plane-vs-sphere-">Applying the displacement (plane vs. sphere)</h3>
+      <h4 id="plane-path-setplanevertices-">Plane path (<code>SetPlaneVertices</code>)</h4>
+      <strong>Displacement:</strong> write <code>noise.v</code> directly into each vertex’s <strong>y</strong> component. <strong>Normals:</strong> derived from <code>dx, dz</code> using analytic formula<br> <code>normal = normalize( (-dx, 1, -dz) )</code>. <strong>Tangents:</strong> build from <code>dx</code> (no z-slope contribution), with handedness <code>w = -1</code>. This yields consistent shading for height-mapped planes.
+
+      <h4 id="sphere-path-setspherevertices-">Sphere path (<code>SetSphereVertices</code>)</h4>
+        <strong>Radial displacement:</strong><br> Values are shifted by <code>+1</code> (so <code>1</code> means the un-displaced radius); derivatives are normalized by <code>v</code> to be <strong>relative to the sphere radius</strong>: <code>noise.v += 1 noise.dx /= noise.v noise.dy /= noise.v noise.dz /= noise.v</code> <strong>Tangent update (if preexisting tangents are nonzero):</strong><br> The code computes how tangents change with displacement (<code>td</code>) and re-orthonormalizes with <code>NormalizeRows()</code>. Handedness is set to <code>-1</code>. <strong>Normals:</strong><br> Derived from displaced position <code>p</code> and the parametric derivatives; the code constructs a matrix whose rows are normalized to recover <strong>unit normals per vertex</strong>. <strong>Positions:</strong><br> Each position is <strong>scaled radially</strong> by <code>noise.v</code> (per-vertex <code>x/y/z</code> kept in direction; length scaled). This preserves smooth shading on spherical meshes with analytic normals/tangents that reflect the displacement field.
+
+      <h3 id="elevation-minheight-semantics">Elevation &amp; minHeight semantics</h3>
+        <code>elevation</code> is a <strong>global gain</strong> applied to every layer’s <code>displacement</code>. It scales both <strong>height</strong> and <strong>derivatives</strong>. Setting it to <code>0</code> collapses all variation (positions become base shape; normals/tangents are flattened accordingly). <code>minHeight</code> is a <strong>post-blend clamp</strong> on the <strong>combined</strong> scalar value. On planes it clamps height; on spheres (after shifting by <code>+1</code>) it effectively enforces a <strong>minimum radial scale</strong> once the value is added to 1.
+      <h3 id="scheduling-lifetime">Scheduling &amp; lifetime</h3>  <code>ScheduleParallel</code> packs all parameters, creates the <code>NativeArray&lt;NoiseLayerData&gt;</code>, and returns the <code>JobHandle</code>. Disposal of the <code>noiseLayers</code> native array is chained to the returned handle. Upstream (<code>ProceduralSurface.GenerateMesh</code>), the caller completes the handle, applies mesh data, and optionally recalculates (or uses the job’s) normals/tangents and generates vertex colors.<h3 id="vertex-colors-context-">Vertex colors (context)</h3> Although not part of <code>CombinedSurfaceJob</code>, <code>ProceduralSurface</code> can run a separate <strong><code>ColorJob</code></strong> afterwards: Computes a <strong>height</strong> on the sphere from radial distance (normalized to <code>[-1, 1]</code> using base radius ± max displacement). Computes <strong>slope</strong> as the angle between vertex normal and world up. Evaluates a list of <strong>color rules</strong> (height/slope/noise/latitude/blend) and writes <code>mesh.colors</code>. This decouples <strong>geometry generation</strong> (this job) from <strong>appearance classification</strong> (color job).<h3 id="performance-correctness-notes">Performance &amp; correctness notes</h3>  <strong>Burst + IJobFor:</strong> SIMD-friendly loops over quads; good cache behavior. <strong>Derivatives:</strong> Carry through the entire pipeline, enabling <strong>analytical normals/tangents</strong> and avoiding expensive post-processing, especially for spheres. <strong>Weights per vertex:</strong> <code>GetWeight</code> currently samples 2D Perlin on <code>(x,z)</code> of <strong>v0 position</strong> for the quad. If you want per-vertex weights, adjust to sample each vertex. <strong>Reinterpret stride:</strong> Ensure the stride passed to <code>Reinterpret&lt;Vertex4&gt;(…)</code> matches the actual bytes per quad. Here it’s <strong>64 bytes</strong> (<code>16 * 4</code>). A mismatch leads to errors like “expected X but is Y bytes”. <strong>Elevation\==0 fast path:</strong> Zeroing derivatives prevents NaNs and keeps shading stable when flattening the surface.<h4 id="extending-the-system">Extending the system</h4>  <strong>Custom layer masks:</strong> Sample <code>GetWeight</code> in 3D space, or incorporate latitude/slope into weights. <strong>Domain derivatives:</strong> If your <code>SpaceTRS</code> can skew/rotate, you may map derivatives via <code>derivativeMatrix</code> to account for anisotropic domains. <strong>LOD / tiles:</strong> Partition the mesh and schedule multiple jobs; combine with culling. <strong>Signed displacement on spheres:</strong> If you want depressions below the base radius, remap <code>noise.v</code> around <code>0</code> (e.g., <code>radius = base + disp</code>) instead of the current <code>+1</code> normalization.<h4 id="typical-usage-from-proceduralsurface-">Typical usage (from <code>ProceduralSurface</code>)</h4>  Build <code>NoiseLayerData[]</code> from enabled <code>NoiseLayer</code> components. Call: <code>CombinedSurfaceJob.ScheduleParallel( meshData, resolution, activeLayers, domain, isPlane: meshType &lt; MeshType.CubeSphere, minHeight, elevation, dependency: meshJobs[(int)meshType]( mesh, meshData, resolution, default, Vector3.one * GetMaxDisplacement(), true ) )</code> Complete handle, apply mesh, optionally recalc normals/tangents (not strictly needed for planes/spheres here), generate vertex colors, and run mesh optimizations.<h3 id="in-one-sentence">In one sentence</h3> <strong><code>CombinedSurfaceJob</code> procedurally deforms plane/sphere meshes by stacking weighted noise layers with analytic derivatives, then writes consistent positions, normals, and tangents per vertex quad—scalable via <code>elevation</code>, clamped by <code>minHeight</code>, and ready for downstream color classification.</strong><h3 id="comparison">Comparison</h3>  The planet with one layer：Having the basic terrian shape but cannot implement more complex terrians ![[Pasted image 20250901003157.png]] The planet with muliple layers: support much more details ![[Pasted image 20250901003228.png]]<h1 id="shader">Shader</h1> <h2 id="vertex-color">Vertex Color</h2> In my implementation, I directly <strong>assign vertex colors in C# during mesh generation</strong> (<code>GenerateVertexColors</code> inside <code>ProceduralSurface</code>). This means the vertex buffer already contains a per-vertex <code>Color</code> attribute when passed into the GPU.  <p>Thanks to this, in Shader Graph I can simply sample the <strong><code>Vertex Color</code> node</strong> instead of recomputing terrain classification in the shader. This provides two major benefits:</p> <strong>Performance</strong> – all classification (height/slope/noise/latitude/blend) is done once on the CPU in jobs, rather than per-pixel on the GPU. <strong>Flexibility</strong> – I can freely author color rules and see them directly baked into the mesh.<h2 id="color-rules">Color Rules</h2> The logic is rule-driven: Each <strong>ColorRule</strong> defines: The condition (Height / Slope / Noise / Latitude / Blend). Two possible colors (<code>color1</code>, <code>color2</code>). A blending curve or interpolation strategy.   During mesh generation, the active rules are evaluated in a <strong>parallel job</strong> (<code>ColorJob</code>). Each vertex color is decided by applying the rules in sequence and then blending results.
+      
+      <h3 id="pseudo-code">Pseudo-code</h3>
+       <pre><code><span class="hljs-keyword">for</span> each vertex v:
+    <span class="hljs-built_in">height</span> = normalize(v.<span class="hljs-built_in">position</span>.magnitude) // <span class="hljs-keyword">or</span> y <span class="hljs-keyword">for</span> plane
+    slope = angle(normal[v], up)
+    <span class="hljs-built_in">color</span> = white
+
+    <span class="hljs-keyword">for</span> each rule r <span class="hljs-keyword">in</span> colorRules:
+        <span class="hljs-built_in">factor</span> = r.Evaluate(<span class="hljs-built_in">height</span>, slope, v.<span class="hljs-built_in">position</span>, v.normal)
+        candidateColor = Lerp(r.color1, r.color2, <span class="hljs-built_in">factor</span>)
+        <span class="hljs-built_in">color</span> = Blend(<span class="hljs-built_in">color</span>, candidateColor, r.weight, r.blendMode)
+
+    v.<span class="hljs-built_in">color</span> = <span class="hljs-built_in">color</span></code></pre>
+       
+    <h2 id="implemented-rules">Implemented Rules</h2>
+    <h3 id="1-height-most-common-">1. Height (most common)</h3>
+      Define ranges of elevation that map to different biomes. Perfect for terrain-like distribution: e.g., ocean → beach → plain → mountain → snow. <strong>Preset Earth/Ice palettes are entirely generated by this rule.</strong> <code>factor = InverseLerp(minHeight, maxHeight, height); factor = heightCurve.Evaluate(factor); color = Lerp(color1, color2, factor);</code>
+
+    <h3 id="2-noise">2. Noise</h3>
+      Splits areas according to a noise function (Perlin in this case, and also supporting other 13 kinds of noises). Produces patchy, irregular patterns (e.g., moss vs. soil, craters vs. flatlands). Reuses the <strong>same noise function as terrain generation</strong>, ensuring consistency. <strong>Used for Martian lowlands.</strong><pre><code><span class="hljs-attribute">factor</span> = PerlinNoise(position.x * noiseScale, position.z * noiseScale); <span class="hljs-attribute">c</span><span class="hljs-attribute">o</span><span class="hljs-attribute">l</span><span class="hljs-attribute">o</span><span class="hljs-attribute">r</span> = Lerp(color1, color2, factor); </code></pre>
+    
+      <h3 id="3-slope">3. Slope</h3>
+        Classifies areas by steepness angle. Useful for distinguishing cliffs vs. flat fields (e.g., add darker rock colors on slopes).<pre><code><span class="hljs-attribute">factor</span> = InverseLerp(minSlope, maxSlope, slope); <span class="hljs-attribute">c</span><span class="hljs-attribute">o</span><span class="hljs-attribute">l</span><span class="hljs-attribute">o</span><span class="hljs-attribute">r</span> = Lerp(color1, color2, factor); </code></pre>
+        
+      <h3 id="4-latitude">4. Latitude</h3>
+        Computes latitude by normalizing Y-axis in [-1, 1]. Produces banded gradients (like polar caps, equatorial forests).<pre><code><span class="hljs-attribute">factor</span> = InverseLerp(-1f, 1f, position.y); <span class="hljs-attribute">color</span> = Lerp(color1, color2, factor); </code></pre>
+        
+      <h3 id="5-blend">5. Blend</h3>
+        A flexible “catch-all” rule. Allows arbitrary mixing of two colors using a given blend mode (Add, Multiply, Overlay, Screen, SoftLight). Useful when combining multiple biome colors smoothly.<pre><code><span class="hljs-title">factor</span> = <span class="hljs-number">0.5</span>f; // <span class="hljs-keyword">default</span> blend color = <span class="hljs-type">Blend</span>(<span class="hljs-title">baseColor</span>, <span class="hljs-type">Lerp</span>(<span class="hljs-title">color1</span>, <span class="hljs-title">color2</span>, <span class="hljs-title">factor</span>), weight, blendMode); </code></pre>
+        
+      <h2 id="color-blender">Color Blender</h2>
+       All rules can contribute sequentially. The <code>BlendColors</code> method defines how one rule’s result interacts with the current accumulated color: <strong>Add</strong>: brightens by summation. <strong>Multiply</strong>: darkens / applies masks. <strong>Overlay / Screen / SoftLight</strong>: common artistic blends from image editing, enabling smoother variation. This layering system adds <strong>diversity on top of the original height-only system</strong>, so the results are not repetitive but varied, even across similar terrains.<h2 id="material-adjustments-for-water-ice">Material Adjustments for Water &amp; Ice</h2> To further refine the visual output, I also adjust <strong>PBR material properties</strong> based on vertex color: When a vertex is classified as <strong>blue</strong> (ice/snow/water), I increase: <strong>Metallic</strong> → simulates reflective wet/icy surface. <strong>Smoothness</strong> → simulates glossy highlights. This provides a simple but effective way to distinguish solid ground from liquid or frozen surfaces without extra textures.
+       
+      <h2 id="key-advantages">Key Advantages</h2>
+        <strong>CPU precomputation</strong>: expensive classification (noise, slope, latitude) is not recalculated in the shader. <strong>Direct Shader Graph integration</strong>: simply plug in the <em>Vertex Color</em> node. <strong>Biome flexibility</strong>: easy to define Earth-like, Mars-like, or fantasy planet palettes by authoring different rules. <strong>Extra realism</strong>: metallic/smoothness adjustment on water/ice adds material-based realism beyond color.
+        
+      <h2 id="preset">Preset</h2>
+       <h3 id="earth">Earth</h3> [PNG]<h3 id="mars">Mars</h3> [PNG]<h3 id="ice">Ice</h3> [PNG]<h1 id="tools">Tools</h1> <h2 id="noisevisualizer2d">NoiseVisualizer2D</h2> [PNG]<h3 id="purpose">Purpose</h3> <code>NoiseVisualizer2D</code> is a custom <strong>Unity EditorWindow</strong> that allows interactive <strong>2D visualization of noise layers</strong> defined in a <code>ProceduralSurface</code>.<br>Its main goal is to provide <strong>real-time previews</strong> of how each noise layer (or their combination) looks in 2D space, which helps with debugging, fine-tuning, and authoring procedural terrains.<h3 id="key-features">Key Features</h3>  <strong>Integration with ProceduralSurface</strong> The window targets a <code>ProceduralSurface</code> instance and directly inspects its private <code>noiseLayers</code> field (via reflection). Supports visualization of all noise types implemented in <code>ProceduralSurface.NoiseType</code>.   <strong>2D Texture Preview</strong> Noise values are sampled into a <code>Texture2D</code> grid (<code>previewTexture</code>). Each pixel corresponds to a <code>(x, z)</code> position mapped into noise space. Noise values are normalized into <code>[0, 1]</code> and remapped into colors via <code>Color.Lerp(lowColor, highColor)</code>.   <strong>Layer Control</strong> Lists all noise layers in the target surface. Allows toggling layers on/off. Clicking <strong>Preview</strong> generates a single-layer preview. Clicking <strong>Show All Layers</strong> generates a weighted combined preview of all enabled layers.   <strong>Combined Preview with Noise-Modulated Weights</strong> Each layer’s contribution is scaled by its weight, which itself can be <strong>noise-modulated</strong> (via <code>NoiseLayer.GetWeight</code>). For the combined preview: The system first computes <code>totalWeight</code> across all enabled layers. Each layer’s noise sample is then weighted proportionally. This produces a blended 2D noise map that matches the <strong>actual runtime blending in CombinedSurfaceJob</strong>.     <strong>Interactive Navigation</strong> <strong>Zoom</strong>: scroll wheel or slider (0.2× to 2×). <strong>Pan</strong>: right-click drag. <strong>Reset View</strong>: quick button to reset zoom/pan.   <strong>Customization</strong> User-defined low/high colors (default black→white) to highlight noise contrast. Preview resolution adjustable (<code>previewSize = 256</code>)<h3 id="workflow">Workflow</h3>    <strong>Open the Tool</strong> Available via Unity menu: <code>Window → Noise Visualizer 2D</code>.   <strong>Select Target Surface</strong> Assign a <code>ProceduralSurface</code> instance in the window. The editor automatically extracts its noise layers.   <strong>Preview Noise</strong> Click a layer’s <strong>Preview</strong> button to visualize only that layer. Click <strong>Show All Layers</strong> to preview the combined effect.   <strong>Adjust View</strong> Use zoom and pan to focus on details. Change color gradient to better distinguish low vs. high regions.<h3 id="implementation-details">Implementation Details</h3> <h4 id="generating-a-layer-preview">Generating a Layer Preview</h4> For each pixel <code>(x, y)</code> in the preview texture:   Map coordinates into noise space (scaled &amp; offset by zoom/pan). Call <code>GenerateNoiseValue(layer, position)</code>: Dispatch to the correct noise generator (Perlin, Simplex, Voronoi, etc.) using <code>switch</code> on <code>layer.noiseType</code>. Use the layer’s <code>noiseSettings</code> (seed, frequency, displacement). Normalize result via <code>Mathf.InverseLerp(-0.5, 0.5, noiseValue)</code>.   Map the normalized value into <code>[lowColor, highColor]</code>.<h4 id="generating-a-combined-preview">Generating a Combined Preview</h4>  For each pixel, compute weights via <code>layer.GetWeight(position)</code>. Normalize weights by dividing each by <code>totalWeight</code>. For each enabled layer: Sample noise value at <code>(x, z)</code>. Multiply by normalized weight. Accumulate into <code>combinedNoise</code>.   Clamp with <code>minHeight</code> from the target surface. Map to <code>[lowColor, highColor]</code>.<h3 id="benefits">Benefits</h3>  <strong>Debugging aid</strong>: You can see exactly what each noise layer looks like before applying it to the 3D mesh. <strong>Authoring tool</strong>: Makes tuning frequencies, octaves, persistence, etc. much easier. <strong>Consistency</strong>: Uses the same noise implementations as <code>CombinedSurfaceJob</code>, so the previews match runtime results. <strong>Interactivity</strong>: Zoom, pan, and layer toggle give fine control.<h3 id="in-one-sentence">In one sentence</h3> <strong><code>NoiseVisualizer2D</code> is an interactive Unity Editor tool that renders 2D previews of <code>ProceduralSurface</code> noise layers—individually or combined with noise-modulated weights—providing immediate visual feedback for procedural terrain authoring.</strong><h2 id="proceduralsurfaceeditor">ProceduralSurfaceEditor</h2> <h3 id="purpose">Purpose</h3> <code>ProceduralSurfaceEditor</code> is a <strong>Unity Custom Inspector</strong> for the <code>ProceduralSurface</code> component.<br>Instead of relying on Unity’s default inspector, this editor provides <strong>structured UI controls</strong> for noise layers, color rules, and vertex color presets, making it easier to author procedural terrains. [PNG]<h3 id="key-features">Key Features</h3> <h4 id="1-noise-layers-management">1. Noise Layers Management</h4>  <strong>Add / Remove Layers</strong>:<br> The inspector shows a numeric input (layer count) and “+” button to add new layers. <strong>Renaming</strong>:<br> Each layer can be renamed via an inline edit field (with pencil icon toggle). <strong>Enable / Disable</strong>:<br> Each layer has a toggle to control whether it contributes to the mesh. <strong>Category Selection</strong>:<br> Each layer has a <code>category</code> dropdown (Base, Mountain, Detail, Volcano, etc.). <strong>Foldout UI</strong>:<br> Clicking the arrow expands the layer, showing editable properties (noise type, settings, weights, etc.).  <p>This structured layout replaces Unity’s generic property drawer and gives fine-grained control per noise layer.</p> <h4 id="2-color-rules-management">2. Color Rules Management</h4>  <strong>Add / Remove Rules</strong>:<br> Similar to noise layers, rules can be added by number field or “+” button. <strong>Renaming</strong>:<br> Inline editing for rule names with pencil icon toggle. <strong>Enable / Disable</strong>:<br> Toggle to activate or deactivate each rule. <strong>Foldout UI with Context-Specific Fields</strong>: <strong>Height Rule</strong>: min/max height + curve. <strong>Slope Rule</strong>: min/max slope + curve. <strong>Noise Rule</strong>: noise type, noise settings, noise scale. <strong>Latitude Rule</strong>: latitude blend parameter. <strong>Blend Rule</strong>: blend mode and weight.   <strong>Color Fields</strong>: each rule has two colors (<code>color1</code>, <code>color2</code>) and a blend curve. This enables precise biome-style classification (ocean, beach, mountain, snow, etc.) directly in the inspector.<h4 id="3-vertex-color-system-settings">3. Vertex Color System Settings</h4>  Global toggle <strong>“Generate Vertex Colors”</strong>. Info box reminding user to use a <code>Custom/VertexColor</code> shader for visualization. Preset buttons: <strong>Add Earth Preset</strong> → Adds 5 rules (Ocean, Beach, Plain, Mountain, Snow). <strong>Add Mars Preset</strong> → Adds 3 rules (Lowland, Highland, Peak). <strong>Add Ice Preset</strong> → Adds 3 rules (Ocean, Ice Plain, Iceberg). These presets give quick starting points for different planet themes.<h4 id="4-other-fields">4. Other Fields</h4> The inspector also exposes the main parameters of <code>ProceduralSurface</code>:   Mesh type (grid, sphere, icosphere, etc.). Recalculate normals/tangents toggles. Mesh optimization mode. Resolution. Global settings (minHeight, elevation, domain transform). Gizmo settings. Material mode and assigned materials. This ensures all relevant parameters are editable in one place.<h3 id="workflow">Workflow</h3>  Attach <code>ProceduralSurface</code> to a GameObject. Open the Inspector: instead of Unity’s default UI, you get the custom <code>ProceduralSurfaceEditor</code>. Add noise layers and tweak their settings. Add color rules (or apply Earth/Mars/Ice presets). Enable <strong>Generate Vertex Colors</strong> and assign a <code>Custom/VertexColor</code> material. Adjust global mesh settings (resolution, elevation, optimization). The procedural mesh regenerates automatically when parameters are changed.<h3 id="why-not-use-unity-s-default-inspector-">Why Not Use Unity’s Default Inspector?</h3> Although Unity automatically exposes serialized fields, the default inspector is <strong>not practical</strong> for a system as complex as procedural terrain: <strong>Raw Lists Are Unintuitive</strong> Noise layers and color rules appear as plain arrays. Adding/removing elements is slow, and renaming requires typing into hidden string fields.   <strong>No Context-Aware Editing</strong> The default inspector shows <em>all fields</em>, even if they don’t apply. Example: slope parameters appear even when the rule type is “Height,” creating confusion. The custom editor hides irrelevant fields, showing only what matters.   <strong>No Presets for Common Worlds</strong> Artists often want “Earth-like,” “Mars-like,” or “Ice-world” palettes. Default inspector forces manual setup of many fields. Custom inspector adds one-click <strong>Earth/Mars/Ice presets</strong>, saving minutes of repetitive work.   <strong>Poor Scalability</strong> With many noise layers and rules, the default inspector becomes a wall of fields. The custom inspector uses foldouts, inline renaming, and toggles to keep the UI readable.   <strong>Iteration Speed &amp; Quality of Life</strong> Quick enable/disable. Inline renaming with pencil icons. Delete buttons per entry. HelpBoxes for guidance. These small improvements make iteration <em>fast and safe</em>.<h3 id="in-one-sentence">In one sentence</h3> <strong><code>ProceduralSurfaceEditor</code> is a custom Unity inspector that organizes noise layers, color rules, and vertex color presets into an intuitive UI—making procedural planet authoring faster, more structured, and more artist-friendly.</strong><h1 id="postprocess-and-skybox">Postprocess and Skybox</h1> Finally, I added a global volume and changed some postprocess params to make it looks much more greater： ![[Pasted image 20250901002354.png]] ![[Pasted image 20250901002423.png]] At last, I chose a wonderdul skybox for it and make it rotating:) Hope you like this project! It might be simple but I did learn a lot.<h1 id="debugging-experience">Debugging Experience</h1> <h2 id="moebius-shader">Moebius Shader</h2> <h2 id="custom-gravity-character">Custom Gravity Character</h2>    
     <!-- User-provided HTML content inserted -->
     <div class="injected">
       <h3 id="data-layout-execution-model">Data layout &amp; execution model</h3>
@@ -171,25 +576,181 @@
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      stars = Array.from({length: 200}, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2,
-        speed: Math.random() * 0.5 + 0.2
-      }));
+      const baseColors = [
+        [255, 180, 120], // 木星橙色
+        [200, 160, 100], // 土星黄褐色
+        [180, 220, 255], // 天王星蓝色
+        [200, 150, 150]  // 火星红褐色
+      ];
+      
+              stars = Array.from({length: 300}, () => {
+          const size = Math.random() * 2;
+          // 减少大行星数量：只有1/8的星星会成为大行星（原来是1/4）
+          const isLargePlanet = size > 1.8 && Math.random() < 0.3;
+          const finalSize = isLargePlanet ? size : size * 0.8; // 减小普通星星的尺寸
+          
+          // 在初始化时确定光环属性
+          const hasRings = isLargePlanet && Math.random() < 0.4; // 20%的大行星有光环
+          const ringAngle = hasRings ? Math.random() * Math.PI * 2 : 0; // 随机倾斜角度
+          
+          return {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: finalSize,
+            speed: Math.random() * 0.5 + 0.2,
+            initialColor: baseColors[Math.floor(Math.random() * baseColors.length)],
+            hasRings: hasRings,
+            ringAngle: ringAngle
+          };
+        });
     }
 
     function draw() {
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'white';
+      
       stars.forEach(s => {
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fill();
-        s.y += s.speed;
+        // 闪烁效果 - 只对普通星星应用
+        const flicker = s.size <= 1.8 ? Math.sin(Date.now() * s.speed * 0.005) * 0.7 + 0.8 : 1;
+        const alpha = 0.5 + flicker * 0.5;
+        
+        // 星星缓慢移动
+        s.x += s.speed * 0.15;
+        s.y += s.speed * 0.08;
+        
+        // 根据大小区分普通星星和大星球 (调整阈值使大星星数量减少到1/4)
+        if(s.size > 1.8) {
+          // 绘制类似木星的大行星，使用预定义的颜色
+          const baseColor = s.initialColor;
+          
+          // 创建径向渐变作为基础
+          const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.size * 8);
+          
+          // 构建基础渐变层次
+          gradient.addColorStop(0, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.9)`);
+          gradient.addColorStop(0.3, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.8)`);
+          gradient.addColorStop(0.6, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.6)`);
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          
+          // 绘制基础行星
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // 添加木星风格的条纹效果
+          const stripeCount = 3;
+          for (let i = 0; i < stripeCount; i++) {
+            const stripeY = s.y - s.size * 2 + (i * s.size * 1.5);
+            const stripeHeight = s.size * 0.3;
+            const stripeWidth = s.size * 4;
+            
+            // 条纹颜色稍微深一些
+            const stripeColor = [
+              Math.max(0, baseColor[0] - 30),
+              Math.max(0, baseColor[1] - 20),
+              Math.max(0, baseColor[2] - 15)
+            ];
+            
+            ctx.fillStyle = `rgba(${stripeColor[0]}, ${stripeColor[1]}, ${stripeColor[2]}, 0.7)`;
+            ctx.fillRect(s.x - stripeWidth/2, stripeY, stripeWidth, stripeHeight);
+          }
+          
+          // 添加漩涡效果（小的圆形渐变）
+          const swirlCount = 2;
+          for (let i = 0; i < swirlCount; i++) {
+            const swirlX = s.x - s.size * 1.5 + (i * s.size * 2);
+            const swirlY = s.y + s.size * 0.5;
+            const swirlSize = s.size * 0.8;
+            
+            // 漩涡颜色稍微亮一些
+            const swirlColor = [
+              Math.min(255, baseColor[0] + 20),
+              Math.min(255, baseColor[1] + 15),
+              Math.min(255, baseColor[2] + 10)
+            ];
+            
+            const swirlGradient = ctx.createRadialGradient(swirlX, swirlY, 0, swirlX, swirlY, swirlSize);
+            swirlGradient.addColorStop(0, `rgba(${swirlColor[0]}, ${swirlColor[1]}, ${swirlColor[2]}, 0.6)`);
+            swirlGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = swirlGradient;
+            ctx.beginPath();
+            ctx.arc(swirlX, swirlY, swirlSize, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          
+                      // 光环属性已在初始化时确定，直接使用
+          
+          if (s.hasRings) {
+            // 绘制光环
+            const ringOuterRadius = s.size * 5;
+            const ringInnerRadius = s.size * 2.5;
+            const ringThickness = s.size * 0.8;
+            
+            // 光环颜色（基于行星颜色但稍微偏黄）
+            const ringColor = [
+              Math.min(255, baseColor[0] + 40),
+              Math.min(255, baseColor[1] + 30),
+              Math.min(255, baseColor[2] + 20)
+            ];
+            
+            // 创建光环的椭圆形状（模拟透视效果）
+            ctx.save();
+            ctx.translate(s.x, s.y);
+            ctx.rotate(s.ringAngle); // 应用随机的倾斜角度
+            ctx.scale(1, 0.3); // 压扁椭圆，模拟光环的透视效果
+            
+            // 绘制外环
+            const outerGradient = ctx.createRadialGradient(0, 0, ringInnerRadius, 0, 0, ringOuterRadius);
+            outerGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+            outerGradient.addColorStop(0.3, `rgba(${ringColor[0]}, ${ringColor[1]}, ${ringColor[2]}, 0.4)`);
+            outerGradient.addColorStop(0.7, `rgba(${ringColor[0]}, ${ringColor[1]}, ${ringColor[2]}, 0.6)`);
+            outerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = outerGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, ringOuterRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 绘制内环（稍微亮一些）
+            const innerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, ringInnerRadius);
+            innerGradient.addColorStop(0, `rgba(${ringColor[0]}, ${ringColor[1]}, ${ringColor[2]}, 0.8)`);
+            innerGradient.addColorStop(0.5, `rgba(${ringColor[0]}, ${ringColor[1]}, ${ringColor[2]}, 0.6)`);
+            innerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = innerGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, ringInnerRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+          }
+        } else {
+          // 绘制普通星星 (数量增加到1.5倍，通过降低size阈值实现)
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size * 0.4, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // 十字形光芒
+          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.3})`;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(s.x - s.size, s.y);
+          ctx.lineTo(s.x + s.size, s.y);
+          ctx.moveTo(s.x, s.y - s.size);
+          ctx.lineTo(s.x, s.y + s.size);
+          ctx.stroke();
+        }
+        
+        // 保持在画布范围内
+        if (s.x < 0) s.x = canvas.width;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.y < 0) s.y = canvas.height;
         if (s.y > canvas.height) s.y = 0;
       });
+      
       requestAnimationFrame(draw);
     }
 
