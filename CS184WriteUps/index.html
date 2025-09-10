@@ -1,0 +1,612 @@
+<html>
+<head>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 60px 20%;
+        }
+
+        figure {
+            text-align: center;
+        }
+
+        img {
+            display: inline-block;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212; /* dark gray */
+            color: #e0e0e0;
+        }
+
+        a {
+            color: #90caf9; /* light blue for links */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>CS184/284A Spring 2025 Homework 2 Write-Up</h1>
+    <div style="text-align: center;">Names: Yuhe Qin & Henry Michaelson</div>
+    <br>
+    Link to webpage: <a href="https://cal-cs184.github.io/hw-webpages-yuhe-henry-webpage/hw2/index.html">hw-webpages-yuhe-henry-webpage</a>
+    <br>
+
+    Link to GitHub repository: <a href="https://github.com/cal-cs184/hw2-meshedit-yuhe-henry-hw2">hw2-meshedit-yuhe-henry</a>
+
+    <figure>
+        <img src="images/peter_black_and_white.png" alt="The Joys of Meshedit" style="width:50%"/>
+        <figcaption>The Joys of Meshedit!</figcaption>
+    </figure>
+
+    <!--
+    We've already added one heading per part, to make your write-up as navigable when grading. Please fit your write-up within these sections!
+    -->
+
+    <h2>Overview</h2>
+    In this homework assignment we implemented various means of representing geometric objects with primitives.
+    In particular, we started by representing curved lines and surface patches through a tight-knit series of points
+    defined by the de Casteljau algorithm.
+
+    We then turned our focus to triangle meshes and implemented vertex normal vectors to assist with Phong shading.
+
+    Lastly, we implemented the loop subdivision algorithm (and its primary edge flip and edge split processes) to allow
+    for mesh upsampling.
+
+    This homework was very beautiful as it showed the power of simple iterative operations to model complex geometry.
+    However, the highly iterative nature of this project meant that many bugs did not show themselves immediately,
+    and thus required a lot of tracing down.
+
+    <h2>Section I: Bezier Curves and Surfaces</h2>
+
+    <h3>Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
+    In this assignment, we completed a single recursive step in the de Casteljau algorithm to evaluate a Bezier curve.
+    The secret of this algorithm
+    lies in its highly recursive nature where each step requires every set of contiguous points to be lerped together as
+    such:
+    <code>left_point * (1-t) + right_point * (t)</code>. This produces a new resultant point for each pair of input
+    points.
+    At each step of this algorithm, the total number of points to blend decreases by 1. Once we have only 1 point left,
+    the algorithm terminates and the one point is returned as the final blending of all the input points. It is
+    useful to know that the de Casteljau algorithm
+    uses a simple recursive mechanic to compute Bezier curves for said input points.
+
+    <p>Here are images showing the de Casteljau algorithm evaluating a septic polynomial based on 6 control points.</p>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <table style="width: 100%; text-align: center; border-collapse: collapse;">
+            <tr>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_curve_l_1.png" width="400px"/>
+                    <figcaption>This represents the first iteration of the algorithm in which control points are
+                        initially blended to create the first intermediate points.
+                    </figcaption>
+                </td>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_curve_l_2.png" width="400px"/>
+                    <figcaption>This represents the second iteration of the algorithm in which the first intermediate
+                        points are blended to create a second set of intermediate points.
+                    </figcaption>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_curve_l_3.png" width="400px"/>
+                    <figcaption>This represents the third iteration of the algorithm in which the second intermediate
+                        points are blended to create a third set of intermediate points.
+                    </figcaption>
+                </td>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_curve_l_4.png" width="400px"/>
+                    <figcaption>This represents the fourth iteration of the algorithm in which the third intermediate
+                        points are blended to create a fourth set of intermediate points.
+                    </figcaption>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_curve_l_5.png" width="400px"/>
+                    <figcaption>At this step, there is only one point inputted into the algorithm. This point is result
+                        of running de Casteljau at a given t and should lie of the final curve that we display.
+                    </figcaption>
+                </td>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_final_curve.png" width="400px"/>
+                    <figcaption>This is the final curve which displays the result of evaluating the de Casteljau
+                        algorithm many samples of t.
+                    </figcaption>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_other_t.png" width="400px"/>
+                    <figcaption>This is the final curve for the same control points but for another value of t.
+                    </figcaption>
+                </td>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_other_t_2.png" width="400px"/>
+                    <figcaption>This is the final curve for the same control points but for yet another value of t.
+                    </figcaption>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <img src="images/problem_1_other_curve_other_t.png" width="400px"/>
+                    <figcaption>This is the final curve for a different pair of control points.</figcaption>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
+    After implementing the simple, de Casteljau algorithm operating on points in 2 dimensions <code>(x,y)</code> space
+    to draw a line, we extended our approach in two meaningful ways:
+    <ul>
+        <li>
+            Firstly, we wanted to be able to represent a line in 3-dimensional space with <code>(x,y,z)</code>
+            coordinates.
+            This meant that we had to switch from using a Vector2D to a Vector3D data-structure. This required us to
+            rewrite our logic from part 1 and extend the lerp functionality to the z-axis.
+        </li>
+        <li>
+            Secondly, we needed to create a 3D patch as our final output, instead of a single Bezier curve.
+            This meant that we had to use our Bezier curves as an intermediate building block, where for a given value
+            of T (now represented by U), we would have to evaluate many independent Bezier curves, creating a series of
+            points which would serve as the new control points for a second degree Bezier curve to be evaluated at V.
+            This allows for a grid of points (also called a patch) to be returned
+            instead of a single line as was the case before.
+        </li>
+    </ul>
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_2_bezier_teapot_normal.png" width="800px"/>
+                <figcaption> This image shows a variety of Bezier patches strung together to create a teapot. This looks
+                    very similar to the teapot that is operated on later on in this homework, but is created via a
+                    series of patches instead of triangle meshes.
+                </figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
+
+    <h3>Part 3: Area-weighted vertex normals</h3>
+    For this part of the assignment we needed to compute the area-weighted vertex normal for a given vertex.
+
+    <b>This is very important so we can get a reliable estimate of each pixel's normal vector which is required for
+        Phong shading.
+        To do this, we performed the following:</b>
+    <ul>
+        <li>
+            We need to have a reliable means of getting the complete fan of vertices which neighbor a given vertex. We
+            can accomplish this with the halfedge data structure where we can use <code>h->twin()->vertex()</code> to
+            get a neighboring vertex. When we call <code>neighbor_vertex->next()</code> we now get back to our original
+            vertex and we can run the same call as above to get the next vertex in the fan. We want to run this process
+            until we are back at the original halfedge that we started with. Once we are back where we started, we have
+            successfully retrieved every neighboring vertex to a given starting vertex.
+        </li>
+        <li>
+            While we are iterating through every neighboring vertex, we need to keep track of the previous neighboring
+            vertex that we just visited. Once we have a unique triplet of our original vertex, the previous vertex,
+            and the current vertex we can then subtract our original vertex from the previous vertex and the current
+            vertex to obtain two vectors.
+            We can then compute the cross product between the two vectors to create a new orthogonal normal vector whose
+            length is twice the area of the triangle spanned by the three vertices. Half of said vector gives us our
+            normal vector for
+            a given triangle (a face) connected to the center vertex.
+
+            Note that we respect winding order by taking <code>current_vertex - original_vertex</code> as current vertex
+            is the vertex that is guaranteed by the halfedge data structure to be counterclockwise to our original
+            vertex. We also know that our original center vertex is counterclockwise to the previous vertex as the halfedge
+            data structure returns the center vertex as the next vertex pointed to by said previous vertex. We then use
+            <code>current_vertex - original_vertex</code> as the first input to the cross product function. This
+            guarantees that said product returns a vector that is normal to the front facing triangle.
+        </li>
+        <li>
+            Lastly, we need to sum up all the normal vectors that we create for each adjacent face to compute a
+            single normal vector that represents said vertex. Each normal vector that we compute is weighted so we can
+            just take half of each vector and sum them together to get a weighted average.
+            After we have summed over all the normal vectors representing the neighboring triangles, we can normalize
+            and return our final vector which is the area-weighted normal for a given vertex.
+        </li>
+    </ul>
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_3_without_phong.png" width="400px"/>
+                <figcaption> Triangle mesh with flat shading.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_3_phong_shading.png" width="400px"/>
+                <figcaption> Triangle mesh with Phong shading.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_3_flat_shading_2.png" width="400px"/>
+                <figcaption> Triangle mesh with flat shading from a different angle.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_3_phong_shading_2.png" width="400px"/>
+                <figcaption> Triangle mesh with Phong shading from a different angle.
+                </figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <h3>Part 4: Edge flip</h3>
+    To implement the edge flip we had to update the elements in the halfedge data structure to point to the right
+    places.
+
+    <br>Specifically, we needed to update the vertices that a given edge pointed to so that it could be flipped.
+    Luckily, flipping an edge does not add / remove any elements. That being said, this implementation was anything but
+    simple.</br>
+
+    <br>There were many elements (vertices, halfedges, edges, and faces) that had to be reassigned and a single mistake
+    could leave a dangling pointer which could
+    break the mesh at a later point. Even more frustrating is that said issues may not arise immediately on the first
+    edge flip, but
+    could show themselves much later, after a few flips have occurred.
+
+
+    </br>
+
+    <br> Therefore, a critical piece of debugging this function was to use the visual inspector to see what each half
+    edge,
+    face, vertex, and edge pointed to after each flip operation. It was also important to try several flip operations to
+    reverse said changes and ensure that after 2 (or more) flips the elements were in their original (or equivalent) state.</br>
+
+    <br> Additionally, we took extra care to draw out sample triangles and painstakingly detailed what each element
+    should do
+    during the transformation.
+    We then made sure to update every element in the flip step, including those elements that did not have their values
+    changed.
+    This was to make sure that we could see every state change that was occurring to allow us to make sure the final
+    state matched our diagram. </br>
+
+    <br> There were a few small bugs on a few halfedges, however, the UI tool allowed us to inspect visually.</br>
+
+    <br> These processes ensured that we did not get too lost at this step.</br>
+    <br>
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_4_base_photo.png" width="400px"/>
+                <figcaption> Teapot mesh before edge flips.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_4_one_flip.png" width="400px"/>
+                <figcaption> Teapot mesh with only one edge flipped.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_4_two_flips.png" width="400px"/>
+                <figcaption> Teapot mesh with two edges flipped.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_4_three_flips.png" width="400px"/>
+                <figcaption> Teapot mesh with three edges flipped.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_4_bottom_base.png" width="400px"/>
+                <figcaption> Teapot mesh viewed from the bottom without any flips.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_4_bottom_flip.png" width="400px"/>
+                <figcaption> Teapot mesh viewed from the bottom with one flip.
+                </figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <h3>Part 5: Edge split</h3>
+    <p>First, we began by hand-drawing the original mesh topology on paper, marking each halfedge, edge, vertex, and
+        face along with their key properties (connectivity pointers, face/edge references, etc.). Then, we sketched the
+        ideal result after an edge split: we added two new halfedges, one new edge, and the split vertex; partitioned
+        the original face into two smaller faces; and updated all the <code>next</code>, <code>twin</code>,
+        <code>vertex</code>, <code>face</code>, and <code>edge</code> pointers accordingly.</p>
+
+    <p>At first glance, our pencil sketch matched the textbook diagrams, so we dove straight into coding Task-6.
+        Unfortunately, the first few runs produced malformed meshes: unexpected holes, dangling edges, and faces that
+        did not close. In our implementation, some new halfedges were not correctly paired with twins, and a few face
+        loops did not reconnect properly, causing triangles to go missing and boundary loops to collapse.</p>
+
+
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/bug_1.png" width="400px"/>
+                <figcaption> The wrong mesh 1
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/bug_2.png" width="400px"/>
+                <figcaption> The wrong mesh 2
+                </figcaption>
+            </td>
+        </tr>
+    </table>
+
+
+    This problem was quite a challenge to debug and there were two key issues in our original solution to this problem.
+    <ul>
+        <li>
+            Firstly, we had two halfedges that we did not update with our original implementation. This became very
+            tricky to track down and caused our loop subdivision algorithm to wildly fail. We decided to manually
+            implement a portion of the loop subdivision algorithm by hand over a small piece of the teapot where we
+            would split each edge and then flip new edges which pointed to both a new and an old vertex. When we did this we
+            noticed that the manual algorithm worked when we would split / flip from the top / left sides first.
+            However, when we would split from the bottom / right sides, we would see the mesh become deformed. We then
+            used ChatGPT and asked why this could be the case. It told us that we were most likely not updating one or
+            more halfedges given that said error was highly dependent on the direction of the split / flip ordering.
+            This was a great hint as it let us find the two needles in the proverbial haystack. We used
+            the visual inspector and specifically looked for malformed halfedges after the degenerate split / flip
+            combination and identified the issue. We lost track and forgot to set a few halfedges. Once we updated said
+            values, we were able to get the manual, by hand, version of loop subdivision to work.
+        </li>
+        <li>
+            This left one more sneaky bug. At this point, we knew that our split and flip operations worked as we were
+            able to perform loop subdivision by hand. However, our automated loop subdivision output was horribly wrong. This
+            gave us a hint that the issue must lie in which edges were getting flipped. The issue is that the loop
+            subdivision algorithm ran so many iterations of split / flip operations that it was impossible to visually
+            inspect and see what was going wrong (like we did in the previous steps / bugs). This took a long time to
+            solve, but eventually we decided to reread the project scope and saw in the provided images one of our edges
+            was incorrectly tagged as being new, as it was newly created, however, it was lying in the original path
+            of an existing edge, and therefore it was not supposed to be new. This was a critical bug with the edge split
+            code that was very hard to detect in the loop subdivision algorithm.
+        </li>
+    </ul>
+
+
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_5_pre_split.png" width="400px"/>
+                <figcaption> Teapot mesh before edge splits.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_5_split_1.png" width="400px"/>
+                <figcaption> Teapot mesh with only one edge split.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_5_split_2.png" width="400px"/>
+                <figcaption> Teapot mesh with two edges split.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_5_split_3.png" width="400px"/>
+                <figcaption> Teapot mesh with three edges split.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_5_split_4.png" width="400px"/>
+                <figcaption> Teapot mesh with four edges split.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_5_pre_split_flip.png" width="400px"/>
+                <figcaption> Teapot viewed from the other side before any split and flip operations.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_5_partial_split_flip.png" width="400px"/>
+                <figcaption> Teapot mesh with a few faces in a column manually subdivided via the loop subdivision
+                    algorithm.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_5_full_split_flip.png" width="400px"/>
+                <figcaption> Teapot mesh with all faces in a column manually subdivided via the loop subdivision
+                    algorithm.
+                </figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <h3>Part 6: Loop subdivision for mesh upsampling</h3>
+
+
+    <p>First, we computed new positions for every original vertex: for each <code>v</code> we set <code>v->isNew =
+        false</code>, traversed its one-ring via <code>h = v->halfedge()</code> and <code>h = h->twin()->next()</code>,
+        summed neighbor positions, counted valence <code>n</code>, computed <code>u = (n == 3 ? 3.0/16.0 :
+            3.0/(8.0*n))</code>, and stored the result in <code>v->newPosition</code>.</p>
+
+    <p>Next, we updated edge-based positions: for each <code>EdgeIter e</code>, we identified its two endpoints
+        <code>v0</code> and <code>v1</code> plus the two opposite vertices <code>v2</code> and <code>v3</code>, then
+        applied the four-point stencil <code>e->newPosition = 3.0/8.0*(v0+v1) + 1.0/8.0*(v2+v3)</code>.</p>
+
+    <p>To prepare for splitting, we collected all original edges in a <code>vector
+        <EdgeIter> originalEdges
+    </code>, marking each <code>e->isNew = false</code> so we could iterate only over those originals. We then looped
+        over that snapshot, called <code>mesh.splitEdge(e)</code> on each, placed the returned vertex at <code>e->newPosition</code>,
+        ensured its halfedge pointed back to itself, and flagged <code>newV->isNew = true</code>.
+    </p>
+
+    <p>After splitting, we refined the triangulation by flipping: we scanned every edge in the mesh and flipped those
+        with <code>e->isNew == true</code> that connected exactly one new and one original vertex, using <code>mesh.flipEdge(e)</code>
+        to improve triangle quality.</p>
+
+    <p>Finally, we finalized the subdivision by copying each <code>v->newPosition</code> back into
+        <code>v->position</code>, yielding the smoothly upsampled mesh.</p>
+
+    <p>During development, we relied heavily on the <code>isNew</code> flags to control splitting and flipping, used a
+        pre-split edge snapshot to avoid infinite loops, and added assertion checks on face loops and twin pairs to
+        catch pointer errors early.</p>
+
+
+    <br>You can see in the images below that loop subdivision rounds sharp corners and can distort the overall geometry
+    of the shape if the topology is not balanced. The cube is a great example showcasing both of these attributes of
+    loop subdivision. You can see in the first set of cube subdivisions, the shape becomes irregular and becomes
+    slightly longer at the vertices where the original edge was not present. We were able to fix this by adjusting the
+    topological mesh structure of the cube by manually splitting all edges so that every vertex had the name degree.
+    Once this was complete, we split that cube and the final shape was much more even. You can see all the images
+    attached of both cubes + subdivisions. We also attached some of the other objects with their appropriate
+    subdivisions.</br>
+
+    <br>You can see in the two images at the bottom with the irregularly split cube, that the vertex locations are noticeably better
+    preserved than in the versions of the subdivided cube with fewer edge splits prior to subdivision. This is because
+    having a greater number of edges prior to subdivision means that each triangle is smaller and therefore each old
+    vertex can move less in the readjustment phase of subdivision. You will see that the overall shape may be strange
+    for these cubes, but this reflects the random nature of the splits that we performed. </br>
+
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_lopsided_cube_0.png" width="400px"/>
+                <figcaption> Lopsided topological cube with 0 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_lopsided_cube_1.png" width="400px"/>
+                <figcaption> Lopsided topological cube with 1 round of loop subdivision complete.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_lopsided_cube_2.png" width="400px"/>
+                <figcaption> Lopsided topological cube with 2 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_lopsided_cube_3.png" width="400px"/>
+                <figcaption> Lopsided topological cube with 3 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_lopsided_cube_4.png" width="400px"/>
+                <figcaption> Lopsided topological cube with 4 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_lopsided_cube_5.png" width="400px"/>
+                <figcaption> Lopsided topological cube with 5 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_lopsided_cube_6.png" width="400px"/>
+                <figcaption> Lopsided topological cube with 6 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_lopsided_cube_7.png" width="400px"/>
+                <figcaption> Lopsided topological cube with 7 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_extra_split_cube_0.png" width="400px"/>
+                <figcaption> Balanced topological cube with 0 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_extra_split_cube_1.png" width="400px"/>
+                <figcaption> Balanced topological cube with 1 round of loop subdivision complete.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_extra_split_cube_2.png" width="400px"/>
+                <figcaption> Balanced topological cube with 2 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_extra_split_cube_3.png" width="400px"/>
+                <figcaption> Balanced topological cube with 3 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_extra_split_cube_4.png" width="400px"/>
+                <figcaption> Balanced topological cube with 4 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_extra_split_cube_5.png" width="400px"/>
+                <figcaption> Balanced topological cube with 5 rounds of loop subdivision complete.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_extra_split_cube_5_rotated.png" width="400px"/>
+                <figcaption> Balanced topological cube with 5 rounds of loop subdivision complete from a different
+                    angle.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_split_bean.png" width="400px"/>
+                <figcaption> Bean object with loop subdivision performed.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_split_cow.png" width="400px"/>
+                <figcaption> Cow object with loop subdivision performed.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_split_quadball.png" width="400px"/>
+                <figcaption> Quadball object with loop subdivision performed.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_split_weird.png" width="400px"/>
+                <figcaption> 'weird' object with loop subdivision performed.
+                </figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img src="images/problem_6_cube_with_irregular_added_splits.png" width="400px"/>
+                <figcaption> Cube object with many irregular pre-splits performed with 1 level of subdivision.
+                </figcaption>
+            </td>
+            <td style="text-align: center;">
+                <img src="images/problem_6_cube_with_irregular_added_splits_1.png" width="400px"/>
+                <figcaption> Cube object with many irregular pre-splits performed with 2 levels of subdivision.
+                </figcaption>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
