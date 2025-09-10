@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CS184/284A Milestone Report</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --accent-color: #00ff88;
+            --text-color: #f1f1f1;
+            --muted-color: #aaaaaa;
+            --highlight: #c5a739;
+            --border-radius: 10px;
+            --max-width: 900px;
+            --spacing: 1.5rem;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 3rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, #263238, #1c1c1c);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid #333;
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: var(--muted-color);
+        }
+
+        .infos {
+            text-align: center;
+            margin: 1.5rem auto;
+            max-width: var(--max-width);
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.75rem;
+        }
+
+        main {
+            max-width: var(--max-width);
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .container {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        }
+
+        section h2 {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--highlight);
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: var(--spacing);
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        .prelim-results {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing);
+        }
+
+        .prelim-results td {
+            width: 50%;
+            padding: 0.5rem;
+            vertical-align: top;
+        }
+
+        .prelim-results img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            background-color: #000;
+        }
+
+        figure {
+            margin: 0;
+        }
+
+        figcaption {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--muted-color);
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            color: var(--muted-color);
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Milestone Report: ML-Guided MIS & Adaptive Sampling</h1>
+    <p>CS184/284A – Mid-Project Progress</p>
+</header>
+<section id="ai_acknowledgement" class="container">
+    <h2>AI Acknowledgement</h2>
+    <p>⚠️ This milestone report was created with assistance from <strong>ChatGPT by OpenAI</strong> for organization,
+        editing, and styling.</p>
+</section>
+<main>
+    <section id="summary" class="container">
+        <h2>1. Summary of Accomplishments</h2>
+        <ol>
+            <li>Implemented substantial piece of original 2D idea using CLIP’s ViT to blur image regions based on
+                predicted importance; realized this did not involve 3D graphics and pivoted.
+            </li>
+            <li>Pivoted to improving path tracing sampling with two features: Multiple Importance Sampling (MIS) for
+                direct lighting in non-diffuse materials, and ML-guided adaptive sampling driven by ViT saliency as
+                suggested by mentor C.K. Wolfe.
+            </li>
+            <li>Set up a GitHub repo and adopted Project 3’s path tracer as our base for implementing MIS and adaptive
+                sampling.
+            </li>
+            <li>Initial implementation of advanced BSDFs (Mirror, Microfacet, Refraction, Glass). ChatGPT assisted with
+                the implementation and debugging of advanced BSDF functions. After implementing, rendered CBdragon.dae
+                with MirrorBSDF.
+            </li>
+            <li>Integrated MIS into the direct-light estimator, adjusted reference MIS solution to address PDF mixing
+                across multiple lights and adding a BSDF-sampling branch; debugged with ChatGPT assistance.
+            </li>
+            <li>Validated MIS by observing proper specular reflection on the rear sphere in CBspheres.dae, confirming
+                improved performance.
+            </li>
+            <li>Attempted to import custom .dae models (e.g., bunny + Cornell Box, and models downloaded from free
+                sources online); faced manifold issues in Blender/MeshLab and currently render black, indicating further
+                mesh and exporter work is needed.
+            </li>
+        </ol>
+    </section>
+    <section id="results" class="container">
+        <h2>2. Preliminary Results</h2>
+        <table class="prelim-results">
+            <tr>
+                <td>
+                    <figure>
+                        <img src="dog_centered_hybrid_mask_50attnclip_1.png" alt="ViT blur mask on dog image">
+                        <figcaption>ViT blur mask from CLIP attention (Discontinued 2D prototype).</figcaption>
+                    </figure>
+                </td>
+                <td>
+                    <figure>
+                        <img src="dog_hybrid_map_50attnclip_1.png" alt="Combined attention map">
+                        <figcaption>Composite attention map (Discontinued 2D prototype).</figcaption>
+                    </figure>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <figure>
+                        <img src="dragon.png" alt="CBdragon.dae with MirrorBSDF">
+                        <figcaption>MirrorBSDF rendering of CBdragon.dae.</figcaption>
+                    </figure>
+                </td>
+                <td>
+                    <figure>
+                        <img src="dragon_sampling.png" alt="Adaptive sampling heatmap CBdragon">
+                        <figcaption>Adaptive sampling map for CBdragon.dae.</figcaption>
+                    </figure>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <figure>
+                        <img src="spheres_pre.png" alt="CBspheres.dae before MIS">
+                        <figcaption>CBspheres.dae without MIS (missing back-sphere reflection).</figcaption>
+                    </figure>
+                </td>
+                <td>
+                    <figure>
+                        <img src="spheres_post.png" alt="CBspheres.dae after MIS">
+                        <figcaption>CBspheres.dae with MIS (correct back-sphere reflection).</figcaption>
+                    </figure>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <figure>
+                        <img src="new_dae.png" alt="Custom bunny + Cornell Box rendering">
+                        <figcaption>Custom (bunny + CBempty).dae (currently rendering black).</figcaption>
+                    </figure>
+                </td>
+            </tr>
+        </table>
+    </section>
+    <section id="reflection" class="container">
+        <h2>3. Reflection on Progress</h2>
+        <p>Balancing Homework 3, final project pivot, and an exam week has been challenging. We successfully pivoted and
+            built a prototype showing MIS improvements, and have groundwork laid for the rest of the project. Major BSDF
+            and MIS components are implemented (although BSDF is very buggy for everything except MirrorBSDF); remaining
+            work focuses on completing adaptive sampling and asset creation.</p>
+    </section>
+    <section id="plan" class="container">
+        <h2>4. Updated Work Plan</h2>
+        <ol>
+            <li><strong>Week 1:</strong> Pivot project and set up repository. <em>(Completed)</em></li>
+            <li><strong>Week 2:</strong> Implement BSDFs and basic MIS; prepare milestone. <em>(Completed, BSDFs
+                debugging ongoing)</em></li>
+            <li><strong>Week 3:</strong>
+                <ol>
+                    <li>Finalize MIS integration and BSDF fixes</li>
+                    <li>Implement ML-driven adaptive sampling (stretch goal if time permits)</li>
+                    <li>Create or fix complex .dae assets for testing</li>
+                    <li>Benchmark strategies and assemble scene repo to showcase improvements</li>
+                </ol>
+            </li>
+            <li><strong>Week 4:</strong> Finalize adaptive sampling (if possible), polish visuals, and prepare presentation.</li>
+        </ol>
+    </section>
+    <section id="video" class="container">
+        <h2>5. Milestone Video</h2>
+        <p><a href="https://drive.google.com/file/d/1tXc5aLS2BewgGELY8hF3GIsj-xs4jonW/view" target="_blank">https://drive.google.com/file/d/1tXc5aLS2BewgGELY8hF3GIsj-xs4jonW/view</a></p>
+    </section>
+    <section id="slides" class="container">
+        <h2>6. Presentation Slides</h2>
+        <p><a href="https://docs.google.com/presentation/d/1GJN4pwOsPF3BZFC9wgDqQsBsexMIAlBjLh5UX7oZTZY/edit?usp=sharing" target="_blank">https://docs.google.com/presentation/d/1GJN4pwOsPF3BZFC9wgDqQsBsexMIAlBjLh5UX7oZTZY/edit?usp=sharing</a></p>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2025 CS184/284A, UC Berkeley</p>
+</footer>
+</body>
+</html>
