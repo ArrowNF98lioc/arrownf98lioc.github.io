@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procedural Planet Writeup</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪐</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono&family=Jersey+25&family=Cascadia+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Jersey 25', sans-serif;
+      background: black;
+      color: #e0e0e0;
+      line-height: 1.6;
+      padding: 0;
+      font-size: 22px;
+      letter-spacing: 0.6px;
+    }
+    
+    /* 导航栏样式 */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #00ffea;
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+    
+    .navbar-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+    }
+    
+    .navbar-title {
+      font-family: 'Press Start 2P', cursive;
+      color: #00ffea;
+      font-size: 23px;
+      margin: 0;
+    }
+    
+    .navbar-nav {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .navbar-nav a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-size: 23px;
+      transition: color 0.3s;
+    }
+    
+    .navbar-nav a:hover {
+      color: #00ffea;
+    }
+    
+    /* 主标题样式 */
+    .main-header {
+      margin-top: 100px;
+      text-align: center;
+      padding: 0;
+      background: transparent url('Proj1_GIF/Title3.png') center top/cover no-repeat;
+      border: none;
+      position: relative;
+      height: 60vh;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    /* 星球图片下半部分渐变遮罩 */
+    .main-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 70%, black 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    
+    /* 标题动画样式 */
+    .title-animation {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .title-gif {
+      max-width: 100%;
+      height: auto;
+      border: 3px solid #00ffea;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 255, 234, 0.4);
+      transition: all 0.3s ease;
+    }
+    
+    .title-gif:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 35px rgba(0, 255, 234, 0.6);
+    }
+    
+    .main-title {
+      font-family: 'Press Start 2P', cursive;
+      color: #00ffea;
+      font-size: 3rem;
+      margin: 0 0 1rem 0;
+      text-shadow: 3px 3px #000, 0 0 20px rgba(0, 255, 234, 0.5);
+      position: relative;
+      z-index: 10;
+      overflow: hidden;
+      border-right: 3px solid #00ffea;
+      white-space: nowrap;
+      animation: blink-caret 1s step-end infinite;
+    }
+    
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: #00ffea; }
+    }
+    
+    .main-subtitle {
+      font-family: 'Press Start 2P', sans-serif;
+      font-size: 23px;
+      color: #ffffff;
+      margin: 0;
+      text-shadow: 2px 2px #000, 0 0 10px rgba(255, 255, 255, 0.3);
+      position: relative;
+      z-index: 10;
+      overflow: hidden;
+      border-right: 2px solid #ffffff;
+      white-space: nowrap;
+      animation: blink-caret-subtitle 1s step-end infinite;
+    }
+    
+    @keyframes blink-caret-subtitle {
+      from, to { border-color: transparent; }
+      50% { border-color: #ffffff; }
+    }
+    
+    /* 内容区域样式 */
+    .content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    canvas#starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Press Start 2P', cursive;
+      color: #00ffea;
+      text-shadow: 2px 2px #000;
+    }
+    code, pre {
+      background: rgba(255,255,255,0.1);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #ff6b9d;
+      font-family: 'Cascadia Code', monospace;
+    }
+    
+    /* 链接样式 - 在黑色背景下更明显 */
+    a {
+      color: #00ffff; /* 青色链接 */
+      text-decoration: none;
+      border-bottom: 1px solid #00ffff;
+      transition: all 0.3s ease;
+    }
+    
+    a:hover {
+      color: #ffffff; /* 悬停时变白 */
+      border-bottom-color: #ffffff;
+      text-shadow: 0 0 8px #00ffff;
+    }
+    
+    a:visited {
+      color: #ff80ff; /* 访问过的链接用粉色 */
+      border-bottom-color: #ff80ff;
+    }
+    img {
+      max-width: 100%;
+      border: 2px solid #555;
+      margin: 1rem 0;
+    }
+    
+    /* GIF和图片演示样式 */
+    .gif-demo {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba(0, 255, 234, 0.05);
+      border: 1px solid rgba(0, 255, 234, 0.2);
+      border-radius: 8px;
+    }
+    
+    .gif-demo h4 {
+      color: #00ffea;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .demo-gif {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #00ffea;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 255, 234, 0.3);
+      margin: 1rem 0;
+      box-sizing: border-box;
+    }
+    
+    /* 图片网格样式 */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .image-item {
+      background: rgba(0, 255, 234, 0.05);
+      border: 1px solid rgba(0, 255, 234, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    .image-item h4 {
+      color: #00ffea;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    
+    .analysis-image {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #00ffea;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 255, 234, 0.3);
+      margin: 1rem 0;
+      box-sizing: border-box;
+    }
+    
+    /* 预设部分样式 */
+    .preset-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: rgba(0, 255, 234, 0.03);
+      border: 1px solid rgba(0, 255, 234, 0.1);
+      border-radius: 12px;
+    }
+    
+    .planet-demo {
+      margin: 2rem 0;
+      text-align: center;
+    }
+    
+    .planet-demo h4 {
+      color: #00ffea;
+      margin-bottom: 0.5rem;
+    }
+    
+    .planet-gif {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #00ffea;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 255, 234, 0.3);
+      margin: 1rem 0;
+      box-sizing: border-box;
+    }
+    
+    .color-rules {
+      margin: 2rem 0;
+    }
+    
+    .color-rules h4 {
+      color: #00ffea;
+      margin-bottom: 1rem;
+    }
+    
+    .rule-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .rule-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 255, 234, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    .rule-item h5 {
+      color: #b0b0b0;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .rule-image {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #00ffea;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 255, 234, 0.3);
+      box-sizing: border-box;
+    }
+    
+    /* 工具演示样式 */
+    .tool-demo {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba(0, 255, 234, 0.05);
+      border: 1px solid rgba(0, 255, 234, 0.2);
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .tool-demo h4 {
+      color: #00ffea;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tool-gif {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #00ffea;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 255, 234, 0.3);
+      margin: 1rem 0;
+      box-sizing: border-box;
+    }
+    
+    .material-gif {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #00ffea;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 255, 234, 0.3);
+      margin: 1rem 0;
+      box-sizing: border-box;
+    }
+    ul, ol {
+      margin-left: 1.5rem;
+    }
+    
+    /* 为段落和列表项添加字间距 */
+    p, li {
+      letter-spacing: 0.6px;
+    }
+    
+    /* 减少段间距 */
+    p {
+      margin-bottom: 0.8rem;
+    }
+    
+    /* 闪烁星星bullet point样式 */
+    ul li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.8rem;
+      list-style: none;
+    }
+    
+    ul li::before {
+      content: "✦";
+      color: #00ffea;
+      position: absolute;
+      left: 0;
+      top: 0.1rem;
+      font-size: 0.9rem;
+      font-weight: bold;
+      line-height: 1;
+      animation: star-twinkle 2s ease-in-out infinite;
+      text-shadow: 0 0 8px rgba(0, 255, 234, 0.6);
+    }
+    
+    /* 嵌套列表的闪烁星星 */
+    ul ul li::before {
+      content: "✧";
+      color: #ff6b9d;
+      font-size: 0.8rem;
+      position: absolute;
+      left: 0;
+      top: 0.1rem;
+      animation: star-twinkle-small 2.5s ease-in-out infinite;
+      text-shadow: 0 0 6px rgba(255, 107, 157, 0.6);
+    }
+    
+    /* 三级嵌套的闪烁星星 */
+    ul ul ul li::before {
+      content: "✩";
+      color: #4ecdc4;
+      font-size: 0.7rem;
+      position: absolute;
+      left: 0;
+      top: 0.1rem;
+      animation: star-twinkle-tiny 3s ease-in-out infinite;
+      text-shadow: 0 0 5px rgba(78, 205, 196, 0.6);
+    }
+    
+    /* 梦幻闪烁动画 */
+    @keyframes star-twinkle {
+      0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+        text-shadow: 0 0 8px rgba(0, 255, 234, 0.6);
+      }
+      25% { 
+        opacity: 0.8;
+        transform: scale(1.05);
+        text-shadow: 0 0 12px rgba(0, 255, 234, 0.8);
+      }
+      50% { 
+        opacity: 0.6;
+        transform: scale(1.1);
+        text-shadow: 0 0 15px rgba(0, 255, 234, 1);
+      }
+      75% { 
+        opacity: 0.8;
+        transform: scale(1.05);
+        text-shadow: 0 0 12px rgba(0, 255, 234, 0.8);
+      }
+    }
+    
+    @keyframes star-twinkle-small {
+      0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+        text-shadow: 0 0 6px rgba(255, 107, 157, 0.6);
+      }
+      30% { 
+        opacity: 0.7;
+        transform: scale(1.03);
+        text-shadow: 0 0 10px rgba(255, 107, 157, 0.8);
+      }
+      60% { 
+        opacity: 0.5;
+        transform: scale(1.06);
+        text-shadow: 0 0 12px rgba(255, 107, 157, 1);
+      }
+    }
+    
+    @keyframes star-twinkle-tiny {
+      0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+        text-shadow: 0 0 5px rgba(78, 205, 196, 0.6);
+      }
+      40% { 
+        opacity: 0.8;
+        transform: scale(1.02);
+        text-shadow: 0 0 8px rgba(78, 205, 196, 0.8);
+      }
+      80% { 
+        opacity: 0.6;
+        transform: scale(1.04);
+        text-shadow: 0 0 10px rgba(78, 205, 196, 1);
+      }
+    }
+    
+    /* 简单精致的有序列表样式 */
+    ol li {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 0.8rem;
+      counter-increment: custom-counter;
+    }
+    
+    ol {
+      counter-reset: custom-counter;
+    }
+    
+    ol li::before {
+      content: counter(custom-counter);
+      color: #00ffea;
+      background: rgba(0, 255, 234, 0.1);
+      border: 1px solid #00ffea;
+      border-radius: 3px;
+      width: 1.5rem;
+      height: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 0;
+      top: 0.1rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    code {
+    font-family: "Cascadia Code", monospace;
+    font-size: 14px;  /* 调整字体大小 */
+    color: #ff6b9d;   /* 设置字体颜色 */
+  }
+    
+    /* 响应式设计 - 平板设备 */
+    @media (max-width: 1024px) {
+      .content {
+        padding: 1.5rem;
+      }
+      
+      .main-title {
+        font-size: 2.5rem;
+      }
+      
+      .navbar-content {
+        padding: 0 1.5rem;
+      }
+      
+      .navbar-nav {
+        gap: 1.5rem;
+      }
+    }
+    
+    /* 响应式设计 - 移动设备 */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 0.5rem 0;
+      }
+      
+      .navbar-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0 1rem;
+      }
+      
+      .navbar-title {
+        font-size: 1rem;
+      }
+      
+      .navbar-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .navbar-nav a {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        background: rgba(0, 255, 234, 0.1);
+        border-radius: 4px;
+        border: 1px solid rgba(0, 255, 234, 0.3);
+      }
+      
+      .main-header {
+        margin-top: 140px;
+        padding: 0;
+        height: 50vh;
+        min-height: 400px;
+      }
+      
+      .title-gif {
+        border-width: 2px;
+        border-radius: 10px;
+      }
+      
+      .main-title {
+        font-size: 2rem;
+        line-height: 1.2;
+      }
+      
+      .main-subtitle {
+        font-size: 1rem;
+      }
+      
+      .content {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+        line-height: 1.3;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+        line-height: 1.3;
+      }
+      
+      h3 {
+        font-size: 1.3rem;
+        line-height: 1.3;
+      }
+      
+      h4 {
+        font-size: 1.1rem;
+        line-height: 1.3;
+      }
+      
+      code, pre {
+        font-size: 12px;
+        padding: 0.3rem 0.5rem;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      
+      /* 移动设备上的链接样式 */
+      a {
+        color: #00ffff;
+        border-bottom: 1px solid #00ffff;
+      }
+      
+      /* 移动设备上的图片样式 */
+      .image-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .rule-images {
+        grid-template-columns: 1fr;
+      }
+      
+      .gif-demo, .tool-demo {
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      
+      .preset-section {
+        padding: 1rem;
+        margin: 2rem 0;
+      }
+      
+      .planet-gif, .demo-gif, .tool-gif, .analysis-image, .rule-image, .material-gif {
+        border-width: 1px;
+        box-shadow: 0 2px 4px rgba(0, 255, 234, 0.2);
+      }
+      
+      pre {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      
+      ul, ol {
+        margin-left: 1rem;
+      }
+      
+      /* 移动设备上的闪烁星星bullet point调整 */
+      ul li {
+        padding-left: 1.3rem;
+        margin-bottom: 0.6rem;
+      }
+      
+      ul li::before {
+        font-size: 0.8rem;
+        top: 0.1rem;
+      }
+      
+      ul ul li::before {
+        font-size: 0.7rem;
+        top: 0.1rem;
+      }
+      
+      ul ul ul li::before {
+        font-size: 0.6rem;
+        top: 0.1rem;
+      }
+      
+      ol li {
+        padding-left: 1.8rem;
+        margin-bottom: 0.6rem;
+      }
+      
+      ol li::before {
+        width: 1.3rem;
+        height: 1.3rem;
+        font-size: 0.7rem;
+      }
+      
+      li {
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        margin-bottom: 0.6rem;
+        line-height: 1.5;
+        letter-spacing: 0.4px;
+      }
+      
+      li {
+        letter-spacing: 0.4px;
+      }
+    }
+    
+    /* 响应式设计 - 小屏移动设备 */
+    @media (max-width: 480px) {
+      .navbar-content {
+        padding: 0 0.5rem;
+      }
+      
+      .navbar-title {
+        font-size: 0.9rem;
+      }
+      
+      .navbar-nav {
+        gap: 0.5rem;
+      }
+      
+      .navbar-nav a {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+      }
+      
+      .main-header {
+        margin-top: 150px;
+        padding: 0;
+        height: 45vh;
+        min-height: 350px;
+      }
+      
+      .main-title {
+        font-size: 1.6rem;
+      }
+      
+      .main-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .content {
+        padding: 0.8rem;
+      }
+      
+      h1 {
+        font-size: 1.6rem;
+      }
+      
+      h2 {
+        font-size: 1.4rem;
+      }
+      
+      h3 {
+        font-size: 1.2rem;
+      }
+      
+      h4 {
+        font-size: 1rem;
+      }
+      
+      code, pre {
+        font-size: 11px;
+        padding: 0.2rem 0.4rem;
+      }
+      
+      ul, ol {
+        margin-left: 0.8rem;
+      }
+      
+      li {
+        margin-bottom: 0.4rem;
+      }
+    }
+    
+    /* 响应式设计 - 超小屏设备 */
+    @media (max-width: 360px) {
+      .navbar-title {
+        font-size: 0.8rem;
+      }
+      
+      .navbar-nav a {
+        font-size: 0.65rem;
+        padding: 0.3rem;
+      }
+      
+      .main-title {
+        font-size: 1.4rem;
+      }
+      
+      .main-subtitle {
+        font-size: 0.8rem;
+      }
+      
+      .content {
+        padding: 0.6rem;
+      }
+      
+      h1 {
+        font-size: 1.4rem;
+      }
+      
+      h2 {
+        font-size: 1.2rem;
+      }
+      
+      h3 {
+        font-size: 1.1rem;
+      }
+      
+      h4 {
+        font-size: 0.9rem;
+      }
+      
+      code, pre {
+        font-size: 10px;
+      }
+    }
+    
+    /* 横屏模式优化 */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .navbar {
+        padding: 0.3rem 0;
+      }
+      
+      .main-header {
+        margin-top: 80px;
+        padding: 0;
+        height: 40vh;
+        min-height: 300px;
+      }
+      
+      .main-title {
+        font-size: 2rem;
+        margin: 0 0 0.5rem 0;
+      }
+      
+      .main-subtitle {
+        font-size: 1rem;
+      }
+    }
+    
+    /* 高分辨率屏幕优化 */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .navbar {
+        border-bottom-width: 1px;
+      }
+      
+      code, pre {
+        border-radius: 2px;
+      }
+    }
+    
+    /* 打印样式 */
+    @media print {
+      .navbar,
+      canvas#starfield {
+        display: none;
+      }
+      
+      .main-header {
+        margin-top: 0;
+        background: none;
+        border: none;
+      }
+      
+      .content {
+        max-width: none;
+        padding: 0;
+      }
+      
+      body {
+        background: white;
+        color: black;
+      }
+      
+      h1, h2, h3, h4 {
+        color: black;
+        text-shadow: none;
+      }
+      
+      code, pre {
+        background: #f5f5f5;
+        color: #333;
+        border: 1px solid #ddd;
+      }
+    }
+    
+    /* 无障碍性改进 */
+    @media (prefers-reduced-motion: reduce) {
+      .navbar-nav a {
+        transition: none;
+      }
+      
+      canvas#starfield {
+        animation: none;
+      }
+    }
+    
+    /* 高对比度模式 */
+    @media (prefers-contrast: high) {
+      .navbar {
+        background: rgba(0, 0, 0, 1);
+        border-bottom: 3px solid #00ffea;
+      }
+      
+      .navbar-nav a {
+        color: white;
+        border: 2px solid #00ffea;
+      }
+      
+      .navbar-nav a:hover {
+        background: #00ffea;
+        color: black;
+      }
+      
+      code, pre {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid #00ffea;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+  
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <h1 class="navbar-title"><a href="#" onclick="window.scrollTo(0,0); return false;" style="text-decoration: none; color: inherit;">Procedural Planet</a></h1>
+       <div class="navbar-nav">
+         <a href="#terrain-anchor">Terrain</a>
+         <a href="#shader-anchor">Shader</a>
+         <a href="#tools-anchor">Tools</a>
+         <a href="#postprocess-anchor">Postprocess</a>
+         <a href="#debugging-anchor">Web Dev</a>
+       </div>
+    </div>
+  </nav>
+  
+  <!-- 主标题 -->
+  <div class="main-header">
+    <h1 class="main-title" id="main-title"></h1>
+    <p class="main-subtitle" id="main-subtitle"></p>
+  </div>
+
+
+
+  
+  <div class="content">
+    <section id="summary">
+      <h1>Summary</h1>
+      <p>
+        <strong>✅ Multi-Layer Noise Terrain Generation System</strong> - High-performance procedural planet generation based on Unity Jobs System<br>
+        <strong>✅ Intelligent Coloring System</strong> - Multi-rule color classification based on height, slope, noise, and latitude<br>
+        <strong>✅ Custom Editor Tools</strong> - NoiseVisualizer2D real-time preview tool + ProceduralSurfaceEditor<br>
+        <strong>✅ Preset Planet Templates</strong> - Three complete biome configurations for Earth, Mars, and Ice worlds<br>
+        <strong>✅ Materials and Post-Processing</strong> - Water surface reflections + Skybox rotation + Global post-processing optimization
+      </p>
+    </section>
+    <!-- Terrain Section -->
+    <section id="terrain">
+      <!-- 添加一个空的锚点，让跳转位置在主标题下方 -->
+      <div id="terrain-anchor" style="position: relative; top: -120px;"></div>
+      
+      <h1>Terrain Generation</h1>
+      
+      <h2 id="basic-code-logic">Basic Code (CatLikeCoding)</h2>
+      <p>In this project, I originally used this <a href="https://catlikecoding.com/unity/tutorials/pseudorandom-surfaces/spherical-elevation/" target="_blank">Procedural Surfaces project of CatLikeCoding</a> It contains the basic noise and how to generate the planet by a single layer of noise. </p>
+      
+      <h2 id="noise-combination">Noise Combination</h2>
+      
+      <h3 id="what-this-job-does">What this job does (high level)</h3>
+      <p>Inspired by <a href="https://www.youtube.com/watch?v=H4g-TC__cvg&list=PLFt_AvWsXl0cONs3T0By4puYy6GM22ko8&index=4" target="_blank">Sebstian Lague's procedural planet</a>, I found that the planet after combination of many layers of noises can be more detailed and able to have more possibilities. To implement the combined job, I created a <code>CombinedSurfaceJob</code>, which is a Burst-compiled <code>IJobFor</code> that procedurally displaces a mesh surface by <strong>stacking multiple noise layers</strong> and then <strong>recomputing normals/tangents</strong> per vertex quad. It supports both <strong>planes</strong> and <strong>spheres</strong> with correct derivatives for shading.</p>
+
+      <h3 id="data-layout-execution-model">Data layout &amp; execution model</h3>
+      <p>The mesh is authored/processed in <strong>quads of 4 vertices</strong>. Each iteration <code>i</code> of the job reads/writes one <code>Vertex4</code>: <code>Vertex4</code> groups four <code>SingleStream.Stream0</code> structs: <code>v0…v3</code> (position, normal, tangent, etc.). The job obtains a typed view over the vertex buffer via<br> <code>meshData.GetVertexData&lt;SingleStream.Stream0&gt;().Reinterpret&lt;Vertex4&gt;(16 * 4)</code>. <code>16</code> is the size (in bytes) of one <code>SingleStream.Stream0</code> lane written four times per quad → <strong>64 bytes stride</strong>.The job is scheduled with: <code>ScheduleParallel(meshData.vertexCount / 4, resolution, dependency)</code> so the <strong>work count equals the number of quads</strong>.</p>
+      
+      <h3 id="inputs">Inputs</h3>
+     
+     <ul>
+       <li><strong>Vertices buffer</strong> (writable) as <code>NativeArray&lt;Vertex4&gt;</code>.</li>
+       <li><strong>Noise layers</strong> as <code>NativeArray&lt;NoiseLayerData&gt;</code>, copied from managed array and disposed after completion.</li>
+       <li><strong>Domain transform</strong> (<code>SpaceTRS</code>):
+         <ul>
+           <li><code>domainTRS</code> (3×4) to transform positions into noise space.</li>
+           <li><code>derivativeMatrix</code> (3×3) available for derivative mapping (here the code builds its own <code>domainMatrix</code> from <code>domainTRS</code>).</li>
+         </ul>
+       </li>
+       <li><strong>Switches/scalars</strong>:
+         <ul>
+           <li><code>isPlane</code> — selects plane or sphere displacement path.</li>
+           <li><code>minHeight</code> — clamps the <strong>final</strong> combined noise value.</li>
+           <li><code>elevation</code> — global multiplier for per-layer displacement and derivatives; if <code>0</code>, derivatives are zeroed to yield a flat surface.</li>
+         </ul>
+       </li>
+     </ul>
+     <h3 id="layer-model-blending">Layer model &amp; blending</h3>
+      <p>Each enabled <code>NoiseLayerData</code> contributes a <code>Sample4</code> (value + x/y/z derivatives for the 4 vertices in the quad). The flow per layer:</p>
+
+      <h4>Sample base noise</h4>
+      <p>Depending on <code>noiseType</code>, the job calls one of:</p>
+      <ul>
+        <li><code>Lattice3D&lt;LatticeNormal, Perlin&gt;</code></li>
+        <li><code>Lattice3D&lt;LatticeNormal, Smoothstep&lt;Turbulence&lt;Perlin&gt;&gt;&gt;</code></li>
+        <li><code>Lattice3D&lt;LatticeNormal, Value&gt;</code></li>
+        <li><code>Simplex3D&lt;Simplex|Smoothstep&lt;Turbulence&lt;Simplex&gt;&gt;|Value&gt;</code></li>
+        <li><code>Voronoi3D&lt;… Worley/SmoothWorley/Chebyshev … F1/F2/F2MinusF1&gt;</code></li>
+      </ul>
+      <p>All calls use <strong>the transformed positions</strong> (float3×4) and the layer's <code>noiseSettings</code> (frequency, octaves, lacunarity, persistence, seed, etc.).</p>
+
+      <h4>Apply displacement scale &amp; elevation</h4>
+      <p><code>layerNoise *= layer.noiseSettings.displacement * elevation</code>. If <code>elevation == 0</code>, <strong>all derivatives are forced to 0</strong> for stability (flat normals/tangents).</p>
+
+      <h4>Compute spatial weight</h4>
+      <p>Per-layer contribution is modulated by a <strong>procedural weight</strong> from <code>NoiseLayerData.GetWeight(position)</code> (increased diversity compared to the original version): Weight uses Perlin on (x,z) scaled by <code>weightFrequency</code> and mixes in a hash seeded by <code>noiseSettings.seed</code>. The final weight is remapped to <code>[weightMin, weightMax]</code>.</p>
+      
+      <h4>Accumulate</h4>
+      <p>Weighted values and derivatives are <strong>summed</strong> into a single <code>combinedNoise</code> for the quad:</p>
+      <pre><code>combined.v += layerNoise.v * weight
+combined.dx += layerNoise.dx * weight
+combined.dy += layerNoise.dy * weight
+combined.dz += layerNoise.dz * weight</code></pre>
+      <h4>Global clamp</h4>
+      <p>After all layers: <code>combined.v = max(combined.v, minHeight)</code>.</p>
+
+      <h3 id="applying-the-displacement-plane-vs-sphere-">Applying the displacement (plane vs. sphere)</h3>
+      <h4 id="plane-path-setplanevertices-">Plane path (<code>SetPlaneVertices</code>)</h4>
+      <p><strong>Displacement:</strong> write <code>noise.v</code> directly into each vertex's <strong>y</strong> component.</p>
+      <p><strong>Normals:</strong> derived from <code>dx, dz</code> using analytic formula <code>normal = normalize( (-dx, 1, -dz) )</code>.</p>
+      <p><strong>Tangents:</strong> build from <code>dx</code> (no z-slope contribution), with handedness <code>w = -1</code>. This yields consistent shading for height-mapped planes.</p>
+
+      <h4 id="sphere-path-setspherevertices-">Sphere path (<code>SetSphereVertices</code>)</h4>
+      <p><strong>Radial displacement:</strong> Values are shifted by <code>+1</code> (so <code>1</code> means the un-displaced radius); derivatives are normalized by <code>v</code> to be <strong>relative to the sphere radius</strong>:</p>
+      <pre><code>noise.v += 1
+noise.dx /= noise.v
+noise.dy /= noise.v
+noise.dz /= noise.v</code></pre>
+      <p><strong>Tangent update (if preexisting tangents are nonzero):</strong> The code computes how tangents change with displacement (<code>td</code>) and re-orthonormalizes with <code>NormalizeRows()</code>. Handedness is set to <code>-1</code>.</p>
+      <p><strong>Normals:</strong> Derived from displaced position <code>p</code> and the parametric derivatives; the code constructs a matrix whose rows are normalized to recover <strong>unit normals per vertex</strong>.</p>
+      <p><strong>Positions:</strong> Each position is <strong>scaled radially</strong> by <code>noise.v</code> (per-vertex <code>x/y/z</code> kept in direction; length scaled). This preserves smooth shading on spherical meshes with analytic normals/tangents that reflect the displacement field.</p>
+
+      <h3 id="elevation-minheight-semantics">Elevation &amp; minHeight semantics</h3>
+      <p><code>elevation</code> is a <strong>global gain</strong> applied to every layer's <code>displacement</code>. It scales both <strong>height</strong> and <strong>derivatives</strong>. Setting it to <code>0</code> collapses all variation (positions become base shape; normals/tangents are flattened accordingly). <code>minHeight</code> is a <strong>post-blend clamp</strong> on the <strong>combined</strong> scalar value. On planes it clamps height; on spheres (after shifting by <code>+1</code>) it effectively enforces a <strong>minimum radial scale</strong> once the value is added to 1.</p>
+      <h3 id="scheduling-lifetime">Scheduling &amp; lifetime</h3>
+      <p><code>ScheduleParallel</code> packs all parameters, creates the <code>NativeArray&lt;NoiseLayerData&gt;</code>, and returns the <code>JobHandle</code>. Disposal of the <code>noiseLayers</code> native array is chained to the returned handle. Upstream (<code>ProceduralSurface.GenerateMesh</code>), the caller completes the handle, applies mesh data, and optionally recalculates (or uses the job's) normals/tangents and generates vertex colors.</p>
+      
+      <h3 id="vertex-colors-context-">Vertex colors (context)</h3>
+      <p>Although not part of <code>CombinedSurfaceJob</code>, <code>ProceduralSurface</code> can run a separate <strong><code>ColorJob</code></strong> afterwards: Computes a <strong>height</strong> on the sphere from radial distance (normalized to <code>[-1, 1]</code> using base radius ± max displacement). Computes <strong>slope</strong> as the angle between vertex normal and world up. Evaluates a list of <strong>color rules</strong> (height/slope/noise/latitude/blend) and writes <code>mesh.colors</code>. This decouples <strong>geometry generation</strong> (this job) from <strong>appearance classification</strong> (color job).</p>
+      
+      <h3 id="performance-correctness-notes">Performance &amp; correctness notes</h3>
+      <ul>
+        <li><strong>Burst + IJobFor:</strong> SIMD-friendly loops over quads; good cache behavior.</li>
+        <li><strong>Derivatives:</strong> Carry through the entire pipeline, enabling <strong>analytical normals/tangents</strong> and avoiding expensive post-processing, especially for spheres.</li>
+        <li><strong>Weights per vertex:</strong> <code>GetWeight</code> currently samples 2D Perlin on <code>(x,z)</code> of <strong>v0 position</strong> for the quad. If you want per-vertex weights, adjust to sample each vertex.</li>
+        <li><strong>Reinterpret stride:</strong> Ensure the stride passed to <code>Reinterpret&lt;Vertex4&gt;(…)</code> matches the actual bytes per quad. Here it's <strong>64 bytes</strong> (<code>16 * 4</code>). A mismatch leads to errors like "expected X but is Y bytes".</li>
+        <li><strong>Elevation==0 fast path:</strong> Zeroing derivatives prevents NaNs and keeps shading stable when flattening the surface.</li>
+      </ul>
+      
+      <h4 id="extending-the-system">Extending the system</h4>
+      <ul>
+        <li><strong>Custom layer masks:</strong> Sample <code>GetWeight</code> in 3D space, or incorporate latitude/slope into weights.</li>
+        <li><strong>Domain derivatives:</strong> If your <code>SpaceTRS</code> can skew/rotate, you may map derivatives via <code>derivativeMatrix</code> to account for anisotropic domains.</li>
+        <li><strong>LOD / tiles:</strong> Partition the mesh and schedule multiple jobs; combine with culling.</li>
+        <li><strong>Signed displacement on spheres:</strong> If you want depressions below the base radius, remap <code>noise.v</code> around <code>0</code> (e.g., <code>radius = base + disp</code>) instead of the current <code>+1</code> normalization.</li>
+      </ul>
+      
+      <h4 id="typical-usage-from-proceduralsurface-">Typical usage (from <code>ProceduralSurface</code>)</h4>
+      <p>Build <code>NoiseLayerData[]</code> from enabled <code>NoiseLayer</code> components. Call:</p>
+      <pre><code>CombinedSurfaceJob.ScheduleParallel(
+  meshData, resolution, activeLayers, domain,
+  isPlane: meshType < MeshType.CubeSphere,
+  minHeight, elevation,
+  dependency: meshJobs[(int)meshType](
+    mesh, meshData, resolution, default,
+    Vector3.one * GetMaxDisplacement(), true
+  )
+)</code></pre>
+      <p>Complete handle, apply mesh, optionally recalc normals/tangents (not strictly needed for planes/spheres here), generate vertex colors, and run mesh optimizations.</p>
+      
+      <h3 id="in-one-sentence">In one sentence</h3>
+      <p><strong><code>CombinedSurfaceJob</code> procedurally deforms plane/sphere meshes by stacking weighted noise layers with analytic derivatives, then writes consistent positions, normals, and tangents per vertex quad—scalable via <code>elevation</code>, clamped by <code>minHeight</code>, and ready for downstream color classification.</strong></p>
+      
+      <h3 id="comparison">Comparison</h3>
+      <div class="image-grid">
+        <div class="image-item">
+          <h4>Single Layer Planet</h4>
+          <p>Having the basic terrain shape but cannot implement more complex terrains</p>
+          <img src="Proj1_GIF/single_layer_planet.png" alt="Single Layer Planet" class="analysis-image" onerror="this.style.display='none'">
+        </div>
+        <div class="image-item">
+          <h4>Multiple Layer Planet</h4>
+          <p>Supports much more details and complex terrain features</p>
+          <img src="Proj1_GIF/multiple_layer_planet.png" alt="Multiple Layer Planet" class="analysis-image" onerror="this.style.display='none'">
+        </div>
+      </div>
+      
+      <h3 id="noise-demonstrations">Noise Demonstrations</h3>
+      <p>Here are some GIF demonstrations showing the different noise effects:</p>
+      
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <div class="gif-demo" style="flex: 1; min-width: 300px;">
+          <img src="Proj1_GIF/singlelayer_smaller.gif" alt="Simple Layer Noise Animation" class="demo-gif" style="width: 100%; height: auto;">
+          <h4>Simple Layer Noise</h4>
+          <p>Shows basic single-layer noise generation:</p>
+        </div>
+        
+        <div class="gif-demo" style="flex: 1; min-width: 300px;">
+          <img src="Proj1_GIF/multilayer_smaller.gif" alt="Multiple Layer Noise Animation" class="demo-gif" style="width: 100%; height: auto;">
+          <h4>Multiple Layer Noise</h4>
+          <p>Demonstrates the combination of multiple noise layers for detailed terrain:</p>
+        </div>
+
+        <div class="gif-demo" style="flex: 1; min-width: 300px;">
+          <img src="Proj1_GIF/minheight_small.gif" alt="Min Height Elevation Animation" class="demo-gif" style="width: 100%; height: auto;">
+          <h4>Min Height & Elevation</h4>
+          <p>Shows how minHeight and elevation parameters affect terrain generation:</p>
+        </div>
+      </div>
+      
+      
+      
+      
+      
+      <div id="shader-anchor" style="position: relative; top: -120px;"></div>
+      
+      <h1 id="shader">Shader</h1>
+      <h2 id="vertex-color">Vertex Color</h2>
+      
+      <p>In my implementation, I directly <strong>assign vertex colors in C# during mesh generation</strong> (<code>GenerateVertexColors</code> inside <code>ProceduralSurface</code>). This means the vertex buffer already contains a per-vertex <code>Color</code> attribute when passed into the GPU.</p>
+      
+      <p>Thanks to this, in Shader Graph I can simply sample the <strong><code>Vertex Color</code> node</strong> instead of recomputing terrain classification in the shader. This provides two major benefits:</p>
+      <ul>
+        <li><strong>Performance</strong> – all classification (height/slope/noise/latitude/blend) is done once on the CPU in jobs, rather than per-pixel on the GPU.</li>
+        <li><strong>Flexibility</strong> – I can freely author color rules and see them directly baked into the mesh.</li>
+      </ul>
+      
+      <h2 id="color-rules">Color Rules</h2>
+      
+      <p>The logic is rule-driven: Each <strong>ColorRule</strong> defines:</p>
+      <ul>
+        <li>The condition (Height / Slope / Noise / Latitude / Blend)</li>
+        <li>Two possible colors (<code>color1</code>, <code>color2</code>)</li>
+        <li>A blending curve or interpolation strategy</li>
+      </ul>
+      <p>During mesh generation, the active rules are evaluated in a <strong>parallel job</strong> (<code>ColorJob</code>). Each vertex color is decided by applying the rules in sequence and then blending results.</p>
+      
+      <h3 id="pseudo-code">Pseudo-code</h3>
+      <pre><code>for each vertex v:
+    height = normalize(v.position.magnitude) // or y for plane
+    slope = angle(normal[v], up)
+    color = white
+
+    for each rule r in colorRules:
+        factor = r.Evaluate(height, slope, v.position, v.normal)
+        candidateColor = Lerp(r.color1, r.color2, factor)
+        color = Blend(color, candidateColor, r.weight, r.blendMode)
+
+    v.color = color</code></pre>
+       
+    <h2 id="implemented-rules">Color Rules</h2>
+    <div class="image-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <div class="image-item">
+        <img src="Proj1_GIF/Noise.png" alt="Noise Pattern" class="analysis-image">
+        <h4>Noise Rule</h4>
+        <p>Uses Perlin noise to create patchy, irregular patterns</p>
+      </div>
+      
+      <div class="image-item">
+        <img src="Proj1_GIF/Height.png" alt="Height Map" class="analysis-image">
+        <h4>Height Rule</h4>
+        <p>Colors terrain based on elevation ranges</p>
+      </div>
+      
+      <div class="image-item">
+        <img src="Proj1_GIF/Slope.png" alt="Slope Analysis" class="analysis-image">
+        <h4>Slope Rule</h4>
+        <p>Applies colors based on terrain steepness</p>
+      </div>
+      
+      <div class="image-item">
+        <img src="Proj1_GIF/Latitude.png" alt="Latitude Mapping" class="analysis-image">
+        <h4>Latitude Rule</h4>
+        <p>Creates banded gradients based on Y-position</p>
+      </div>
+      
+      <div class="image-item">
+        <img src="Proj1_GIF/Blend.png" alt="Blend Visualization" class="analysis-image">
+        <h4>Blend Rule</h4>
+        <p>Final result after blending all color rules</p>
+      </div>
+    </div>
+    
+    <h3 id="1-height-most-common-">1. Height (most common)</h3>
+    <p>Define ranges of elevation that map to different biomes. Perfect for terrain-like distribution: e.g., ocean → beach → plain → mountain → snow. <strong>Preset Earth/Ice palettes are entirely generated by this rule.</strong></p>
+    <pre><code>factor = InverseLerp(minHeight, maxHeight, height);
+factor = heightCurve.Evaluate(factor);
+color = Lerp(color1, color2, factor);</code></pre>
+
+    <h3 id="2-noise">2. Noise</h3>
+    <p>Splits areas according to Perlin noise function. Produces patchy, irregular patterns (e.g., moss vs. soil, craters vs. flatlands). Reuses the <strong>same noise function as terrain generation</strong>, ensuring consistency. <strong>Used for Martian lowlands.</strong></p>
+    <pre><code>factor = PerlinNoise(position.x * noiseScale, position.z * noiseScale);
+color = Lerp(color1, color2, factor);</code></pre>
+    
+    <h3 id="3-slope">3. Slope</h3>
+    <p>Classifies areas by steepness angle. Useful for distinguishing cliffs vs. flat fields (e.g., add darker rock colors on slopes).</p>
+    <pre><code>factor = InverseLerp(minSlope, maxSlope, slope);
+color = Lerp(color1, color2, factor);</code></pre>
+        
+    <h3 id="4-latitude">4. Latitude</h3>
+    <p>Computes latitude by normalizing Y-axis in [-1, 1]. Produces banded gradients (like polar caps, equatorial forests).</p>
+    <pre><code>factor = InverseLerp(-1f, 1f, position.y);
+color = Lerp(color1, color2, factor);</code></pre>
+        
+    <h3 id="5-blend">5. Blend</h3>
+    <p>A flexible "catch-all" rule. Allows arbitrary mixing of two colors using a given blend mode (Add, Multiply, Overlay, Screen, SoftLight). Useful when combining multiple biome colors smoothly.</p>
+    <pre><code>factor = 0.5f; // default blend
+color = Blend(baseColor, Lerp(color1, color2, factor), weight, blendMode);</code></pre>
+        
+      
+      <h2 id="key-advantages">Key Advantages</h2>
+      <ul>
+        <li><strong>CPU precomputation</strong>: expensive classification (noise, slope, latitude) is not recalculated in the shader.</li>
+        <li><strong>Direct Shader Graph integration</strong>: simply plug in the <em>Vertex Color</em> node.</li>
+        <li><strong>Biome flexibility</strong>: easy to define Earth-like, Mars-like, or fantasy planet palettes by authoring different rules.</li>
+        <li><strong>Extra realism</strong>: metallic/smoothness adjustment on water/ice adds material-based realism beyond color.</li>
+      </ul>
+
+      <h2 id="material">Material</h2>
+      <div class="material-section">
+        <h3 id="water">Water Material Implementation in Shader Graph</h3>
+        <p>Water material with metallic, smoothness, and color adjustments:</p>
+        <p>In the shader graph, I implemented water material properties by detecting blue colors in the vertex colors. Here's how it works:</p>
+        <ul>
+          <li>Use a Split node to separate the RGB channels of the vertex color</li>
+          <li>Compare the Blue channel value with Red and Green channels to detect water areas</li>
+          <li>If Blue > (Red + Green), we consider it as water and adjust material properties:
+            <ul>
+              <li>Set Metallic to 0.8 for reflective water surface</li>
+              <li>Set Smoothness to 0.9 for glossy water appearance</li>
+              <li>For non-water areas, keep default material properties</li>
+            </ul>
+          </li>
+        </ul>
+        <p>This creates realistic water surfaces that reflect light differently from terrain:</p>
+        <img src="Proj1_GIF/material_color_smaller.gif" alt="Material Change Animation" class="material-gif" style="width: 75%; height: auto; display: block; margin-left: auto; margin-right: auto;">
+        <div class="image-item">
+          <details>
+            <summary>Click to view ShaderGraph implementation</summary>
+            <img src="Proj1_GIF/VertexShader.png" alt="Vertex Shader" class="analysis-image">
+          </details>
+        </div>
+      </div>
+        
+        
+      <h2 id="preset">Preset</h2>
+       
+       <div class="preset-section" style="border: 1px solid rgba(0, 255, 234, 0.2); border-radius: 8px; padding: 2rem; margin: 2rem 0;">
+         <h3 id="earth">Earth</h3> 
+         <p>Earth-like planet with ocean, beach, plains, mountains, and snow:</p>
+         
+         <div class="planet-demo">
+           <h4>Earth Planet Animation</h4>
+           <p>Loading may take a few seconds...</p>
+           <p>Full Earth-like planet demonstration:</p>
+            <img src="Proj1_GIF/earth_small.gif" alt="Earth Planet Animation" class="planet-gif">
+         </div>
+         
+         <div class="color-rules">
+           <h4>Earth Color Rules</h4>
+           <div class="rule-images">
+             <div class="rule-item">
+               <details>
+                 <summary>Click to view Earth color rules</summary>
+                  <img src="Proj1_GIF/Earth.jpg" alt="Earth Color Rule" class="rule-image">
+               </details>
+             </div>
+           </div>
+         </div>
+         
+         <h3 id="mars">Mars</h3>
+         <p>Mars-like planet with lowlands, highlands, and peaks:</p>
+         
+         <div class="planet-demo">
+           <h4>Mars Planet Animation</h4>
+           <p>Full Mars-like planet demonstration:</p>
+            <img src="Proj1_GIF/mars_small.gif" alt="Mars Planet Animation" class="planet-gif">
+         </div>
+         
+         <div class="color-rules">
+           <h4>Mars Color Rules</h4>
+           <div class="rule-images">
+             <div class="rule-item">
+               <details>
+                 <summary>Click to view Mars color rules</summary>
+                  <img src="Proj1_GIF/Mars.jpg" alt="Mars Color Rule" class="rule-image">
+               </details>
+             </div>
+           </div>
+         </div>
+         
+         <h3 id="ice">Ice</h3>
+         <p>Ice world with ocean, ice plains, and icebergs:</p>
+         
+         <div class="planet-demo">
+           <h4>Ice Planet Animation</h4>
+           <p>Full ice world demonstration:</p>
+            <img src="Proj1_GIF/ice_small.gif" alt="Ice Planet Animation" class="planet-gif">
+         </div>
+         
+         <div class="color-rules">
+           <h4>Ice Color Rules</h4>
+           <div class="rule-images">
+             <div class="rule-item">
+               <details>
+                 <summary>Click to view Ice color rules</summary>
+                  <img src="Proj1_GIF/Ice.jpg" alt="Ice Color Rule" class="rule-image">
+               </details>
+             </div>
+           </div>
+         </div>
+       </div>
+      <div id="tools-anchor" style="position: relative; top: -120px;"></div>
+      
+      <h1 id="tools">Tools</h1>
+      <h2 id="noisevisualizer2d">NoiseVisualizer2D</h2>
+      <div class="tool-demo">
+        <h4>Noise Visualizer 2D Animation</h4>
+        <div class="image-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          <div class="image-item">
+            <img src="Proj1_GIF/NoiseVisualizerStep1.png" alt="NoiseVisualizer Step 1 - Basic Setup" class="analysis-image">
+            <h4>Step 1: Basic Window Setup</h4>
+            <p>Click Window -> Noise Visualizer 2D to open the tool</p>
+          </div>
+          
+          <div class="image-item">
+            <img src="Proj1_GIF/NoiseVisualizerStep2.png" alt="NoiseVisualizer Step 2 - Layer Management" class="analysis-image">
+            <h4>Step 2: Layer Management UI</h4>
+            <p>Draw ProceduralSurface to the window</p>
+          </div>
+          
+          <div class="image-item">
+            <img src="Proj1_GIF/NoiseVisualizerStep3.gif" alt="NoiseVisualizer Step 3 - Single Layer Preview" class="demo-gif">
+            <h4>Step 3: Single Layer Preview</h4>
+            <p>Click each layer to preview, or click Show All Layers to preview the combined effect</p>
+          </div>
+          
+          <div class="image-item">
+            <img src="Proj1_GIF/NoiseVisualizerStep4_View.gif" alt="NoiseVisualizer Step 4 - Interactive Navigation" class="demo-gif">
+            <h4>Step 4: Interactive Navigation</h4>
+            <p>Zoom and pan controls for detailed inspection of noise patterns.</p>
+          </div>
+          
+          <div class="image-item">
+            <img src="Proj1_GIF/NoiseVisualizerStep5_Color.gif" alt="NoiseVisualizer Step 5 - Color Customization" class="demo-gif">
+            <h4>Step 5: Color Customization</h4>
+            <p>Customizable color gradients for better noise pattern visualization.</p>
+          </div>
+          
+          <div class="image-item">
+            <img src="Proj1_GIF/NoiseVisualizerStep6_EditLayers.gif" alt="NoiseVisualizer Step 6 - Layer Editing" class="demo-gif">
+            <h4>Step 6: Layer Editing & Combined Preview</h4>
+            <p>Layer editing capabilities and combined multi-layer preview functionality.</p>
+          </div>
+        </div>
+      </div>
+      
+      <h3 id="purpose">Purpose</h3>
+      <p><code>NoiseVisualizer2D</code> is a custom <strong>Unity EditorWindow</strong> that allows interactive <strong>2D visualization of noise layers</strong> defined in a <code>ProceduralSurface</code>.</p>
+      <p>Its main goal is to provide <strong>real-time previews</strong> of how each noise layer (or their combination) looks in 2D space, which helps with debugging, fine-tuning, and authoring procedural terrains.</p>
+        
+      <h3 id="key-features">Key Features</h3>
+      <ul>
+        <li><strong>Integration with ProceduralSurface</strong> The window targets a <code>ProceduralSurface</code> instance and directly inspects its private <code>noiseLayers</code> field (via reflection). Supports visualization of all noise types implemented in <code>ProceduralSurface.NoiseType</code>.</li>
+        <li><strong>2D Texture Preview</strong> Noise values are sampled into a <code>Texture2D</code> grid (<code>previewTexture</code>). Each pixel corresponds to a <code>(x, z)</code> position mapped into noise space. Noise values are normalized into <code>[0, 1]</code> and remapped into colors via <code>Color.Lerp(lowColor, highColor)</code>.</li>
+        <li><strong>Layer Control</strong> Lists all noise layers in the target surface. Allows toggling layers on/off. Clicking <strong>Preview</strong> generates a single-layer preview. Clicking <strong>Show All Layers</strong> generates a weighted combined preview of all enabled layers.</li>
+        <li><strong>Combined Preview with Noise-Modulated Weights</strong> Each layer's contribution is scaled by its weight, which itself can be <strong>noise-modulated</strong> (via <code>NoiseLayer.GetWeight</code>). For the combined preview: The system first computes <code>totalWeight</code> across all enabled layers. Each layer's noise sample is then weighted proportionally. This produces a blended 2D noise map that matches the <strong>actual runtime blending in CombinedSurfaceJob</strong>.</li>
+        <li><strong>Interactive Navigation</strong> <strong>Zoom</strong>: scroll wheel or slider (0.2× to 2×). <strong>Pan</strong>: right-click drag. <strong>Reset View</strong>: quick button to reset zoom/pan.</li>
+        <li><strong>Customization</strong> User-defined low/high colors (default black→white) to highlight noise contrast. Preview resolution adjustable (<code>previewSize = 256</code>)</li>
+      </ul>
+      
+      <h3 id="workflow">Workflow</h3>
+      <ul>
+        <li><strong>Open the Tool</strong> Available via Unity menu: <code>Window → Noise Visualizer 2D</code>.</li>
+        <li><strong>Select Target Surface</strong> Assign a <code>ProceduralSurface</code> instance in the window. The editor automatically extracts its noise layers.</li>
+        <li><strong>Preview Noise</strong> Click a layer's <strong>Preview</strong> button to visualize only that layer. Click <strong>Show All Layers</strong> to preview the combined effect.</li>
+        <li><strong>Adjust View</strong> Use zoom and pan to focus on details. Change color gradient to better distinguish low vs. high regions.</li>
+      </ul>
+        
+      <h3 id="implementation-details">Implementation Details</h3>
+      <h4 id="generating-a-layer-preview">Generating a Layer Preview</h4>
+      <p>For each pixel <code>(x, y)</code> in the preview texture:</p>
+      <ul>
+        <li>Map coordinates into noise space (scaled &amp; offset by zoom/pan)</li>
+        <li>Call <code>GenerateNoiseValue(layer, position)</code>: Dispatch to the correct noise generator (Perlin, Simplex, Voronoi, etc.) using <code>switch</code> on <code>layer.noiseType</code></li>
+        <li>Use the layer's <code>noiseSettings</code> (seed, frequency, displacement)</li>
+        <li>Normalize result via <code>Mathf.InverseLerp(-0.5, 0.5, noiseValue)</code></li>
+        <li>Map the normalized value into <code>[lowColor, highColor]</code></li>
+      </ul>
+      
+      <h4 id="generating-a-combined-preview">Generating a Combined Preview</h4>
+      <p>For each pixel:</p>
+      <ul>
+        <li>Compute weights via <code>layer.GetWeight(position)</code></li>
+        <li>Normalize weights by dividing each by <code>totalWeight</code></li>
+        <li>For each enabled layer: Sample noise value at <code>(x, z)</code></li>
+        <li>Multiply by normalized weight</li>
+        <li>Accumulate into <code>combinedNoise</code></li>
+        <li>Clamp with <code>minHeight</code> from the target surface</li>
+        <li>Map to <code>[lowColor, highColor]</code></li>
+      </ul>
+      
+      <h3 id="benefits">Benefits</h3>
+        <li><strong>Debugging aid</strong>: You can see exactly what each noise layer looks like before applying it to the 3D mesh.</li>
+        <li><strong>Authoring tool</strong>: Makes tuning frequencies, octaves, persistence, etc. much easier.</li>
+        <li><strong>Consistency</strong>: Uses the same noise implementations as <code>CombinedSurfaceJob</code>, so the previews match runtime results.</li>
+        <li><strong>Interactivity</strong>: Zoom, pan, and layer toggle give fine control.</li>
+        
+      <h3 id="in-one-sentence">In one sentence</h3>
+      <p><strong><code>NoiseVisualizer2D</code> is an interactive Unity Editor tool that renders 2D previews of <code>ProceduralSurface</code> noise layers—individually or combined with noise-modulated weights—providing immediate visual feedback for procedural terrain authoring.</strong></p>
+      
+      <h3 id="step-by-step-development">Step-by-Step Development Process</h3>
+      <p>Here's a detailed walkthrough of how the NoiseVisualizer2D tool was developed, showing each step of the implementation:</p>
+      
+      
+      
+      <h4 id="development-insights">Development Insights</h4>
+      <p>The step-by-step development process reveals several key insights:</p>
+      <ul>
+        <li><strong>Iterative Design</strong>: Each step built upon the previous, allowing for continuous refinement of the user interface and functionality.</li>
+        <li><strong>User Experience Focus</strong>: The addition of interactive navigation (Step 4) and color customization (Step 5) significantly improved the tool's usability.</li>
+        <li><strong>Progressive Complexity</strong>: Starting with basic single-layer previews and gradually adding multi-layer support ensured a solid foundation.</li>
+        <li><strong>Real-time Feedback</strong>: The GIF demonstrations show how the tool provides immediate visual feedback, making terrain authoring much more intuitive.</li>
+      </ul>
+        
+      <h2 id="proceduralsurfaceeditor">ProceduralSurfaceEditor</h2>
+      <h3 id="purpose">Purpose</h3>
+      <p><code>ProceduralSurfaceEditor</code> is a <strong>Unity Custom Inspector</strong> for the <code>ProceduralSurface</code> component.</p>
+      <p>Instead of relying on Unity's default inspector, this editor provides <strong>structured UI controls</strong> for noise layers, color rules, and vertex color presets, making it easier to author procedural terrains.</p>
+        
+      <h3 id="key-features">Key Features</h3>
+      <h4 id="1-noise-layers-management">1. Noise Layers Management</h4>
+        <li><strong>Add / Remove Layers</strong>: The inspector shows a numeric input (layer count) and "+" button to add new layers.</li>
+        <li><strong>Renaming</strong>: Each layer can be renamed via an inline edit field (with pencil icon toggle).</li>
+        <li><strong>Enable / Disable</strong>: Each layer has a toggle to control whether it contributes to the mesh.</li>
+        <li><strong>Category Selection</strong>: Each layer has a <code>category</code> dropdown (Base, Mountain, Detail, Volcano, etc.).</li>
+        <li><strong>Foldout UI</strong>: Clicking the arrow expands the layer, showing editable properties (noise type, settings, weights, etc.).</li>
+      <p>This structured layout replaces Unity's generic property drawer and gives fine-grained control per noise layer.</p> 
+        
+      <h4 id="2-color-rules-management">2. Color Rules Management</h4>
+        <li><strong>Add / Remove Rules</strong>: Similar to noise layers, rules can be added by number field or "+".</li>
+        <li><strong>Renaming</strong>: Inline editing for rule names with pencil icon toggle.</li>
+        <li><strong>Enable / Disable</strong>: Toggle to activate or deactivate each rule.</li>
+        <li><strong>Foldout UI with Context-Specific Fields</strong>:
+          <ul>
+            <li><strong>Height Rule</strong>: min/max height + curve</li>
+            <li><strong>Slope Rule</strong>: min/max slope + curve</li>
+            <li><strong>Noise Rule</strong>: noise type, noise settings, noise scale</li>
+            <li><strong>Latitude Rule</strong>: latitude blend parameter</li>
+            <li><strong>Blend Rule</strong>: blend mode and weight</li>
+          </ul>
+        </li>
+        <li><strong>Color Fields</strong>: each rule has two colors. This enables precise biome-style classification (ocean, beach, mountain, snow, etc.) directly in the inspector.</li>
+        
+      <h4 id="3-vertex-color-system-settings">3. Vertex Color System Settings</h4>
+        <li>Global toggle <strong>"Generate Vertex Colors"</strong></li>
+        <li>Info box reminding user to use a <code>Custom/VertexColor</code> shader for visualization</li>
+        <li>Preset buttons:
+          <ul>
+            <li><strong>Add Earth Preset</strong> → Adds 5 rules (Ocean, Beach, Plain, Mountain, Snow)</li>
+            <li><strong>Add Mars Preset</strong> → Adds 3 rules (Lowland, Highland, Peak)</li>
+            <li><strong>Add Ice Preset</strong> → Adds 3 rules (Ocean, Ice Plain, Iceberg)</li>
+          </ul>
+        </li>
+      <p>These presets give quick starting points for different planet themes.</p>
+        
+      <h4 id="4-other-fields">4. Other Fields</h4>
+      <p>The inspector also exposes the main parameters of <code>ProceduralSurface</code>:</p>
+        <li>Mesh type (grid, sphere, icosphere, etc.)</li>
+        <li>Recalculate normals/tangents toggles</li>
+        <li>Mesh optimization mode</li>
+        <li>Resolution</li>
+        <li>Global settings (minHeight, elevation, domain transform)</li>
+        <li>Gizmo settings</li>
+        <li>Material mode and assigned materials</li>
+      <p>This ensures all relevant parameters are editable in one place.</p>
+        
+      <h3 id="workflow">Workflow</h3>
+        <li>Attach <code>ProceduralSurface</code> to a GameObject</li>
+        <li>Open the Inspector: instead of Unity's default UI, you get the custom <code>ProceduralSurfaceEditor</code></li>
+        <li>Add noise layers and tweak their settings</li>
+        <li>Add color rules (or apply Earth/Mars/Ice presets)</li>
+        <li>Enable <strong>Generate Vertex Colors</strong> and assign a <code>Custom/VertexColor</code> material</li>
+        <li>Adjust global mesh settings (resolution, elevation, optimization)</li>
+        <li>The procedural mesh regenerates automatically when parameters are changed</li>
+        
+      <h3 id="why-not-use-unity-s-default-inspector-">Why Not Use Unity's Default Inspector?</h3>
+      <p>Although Unity automatically exposes serialized fields, the default inspector is <strong>not practical</strong> for a system as complex as procedural terrain:</p>
+        <li><strong>Raw Lists Are Unintuitive</strong> Noise layers and color rules appear as plain arrays. Adding/removing elements is slow, and renaming requires typing into hidden string fields.</li>
+        <li><strong>No Context-Aware Editing</strong> The default inspector shows <em>all fields</em>, even if they don't apply. Example: slope parameters appear even when the rule type is "Height," creating confusion. The custom editor hides irrelevant fields, showing only what matters.</li>
+        <li><strong>No Presets for Common Worlds</strong> Artists often want "Earth-like," "Mars-like," or "Ice-world" palettes. Default inspector forces manual setup of many fields. Custom inspector adds one-click <strong>Earth/Mars/Ice presets</strong>, saving minutes of repetitive work.</li>
+        <li><strong>Poor Scalability</strong> With many noise layers and rules, the default inspector becomes a wall of fields. The custom inspector uses foldouts, inline renaming, and toggles to keep the UI readable.</li>
+        <li><strong>Iteration Speed &amp; Quality of Life</strong> Quick enable/disable. Inline renaming with pencil icons. Delete buttons per entry. HelpBoxes for guidance. These small improvements make iteration <em>fast and safe</em>.</li>
+        
+      <h3 id="in-one-sentence">In one sentence</h3>
+      <p><strong><code>ProceduralSurfaceEditor</code> is a custom Unity inspector that organizes noise layers, color rules, and vertex color presets into an intuitive UI—making procedural planet authoring faster, more structured, and more artist-friendly.</strong></p>      <!-- 添加一个空的锚点，让跳转位置在主标题下方 -->
+      <div id="postprocess-anchor" style="position: relative; top: -120px;"></div>
+      
+      <h1 id="postprocess-and-skybox">Postprocess and Skybox</h1>
+      <p>Finally, I added a global volume and changed some postprocess params to make it looks much more greater:</p>
+      <div class="image-grid">
+        <div class="image-item">
+          <h4>Postprocess Settings</h4>
+          <img src="Proj1_GIF/postprocess_settings.png" alt="Postprocess Settings" class="analysis-image" onerror="this.style.display='none'">
+        </div>
+        <div class="image-item">
+          <h4>Skybox Configuration</h4>
+          <img src="Proj1_GIF/skybox_config.png" alt="Skybox Configuration" class="analysis-image" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <p>At last, I chose a wonderful skybox for it and make it rotating:) Hope you like this project! It might be simple but I did learn a lot.</p>
+      
+      <!-- 添加一个空的锚点，让跳转位置在主标题下方 -->
+      <div id="debugging-anchor" style="position: relative; top: -120px;"></div>
+      
+      <h1 id="web-development">Web Development</h1>
+      <h2 id="procedural-starfield">🌟 Procedural Starfield Background</h2>
+      <p><strong>This webpage itself is a masterpiece of procedural generation!</strong> The animated starfield background you see is entirely generated using JavaScript and Canvas API, creating a living, breathing universe that responds to your device and viewport.</p>
+      
+      <div class="gif-demo">
+        <h4>🎨 Live Procedural Generation</h4>
+        <p>Every time you refresh the page, the starfield is completely regenerated with new star positions, sizes, and planetary configurations. No two visits are ever the same!</p>
+      </div>
+      
+      <h3 id="starfield-features">✨ Starfield Features</h3>
+      <ul>
+        <li><strong>Procedural Star Generation</strong>: 400+ stars randomly positioned and sized using mathematical algorithms</li>
+        <li><strong>Dynamic Parallax Animation</strong>: Stars move with depth-based speed - smaller stars move faster, creating realistic 3D depth</li>
+        <li><strong>Planetary Bodies with Atmospheres</strong>: Large stars become planets with atmospheric gradients, surface stripes, and swirling storms</li>
+        <li><strong>Procedural Ring Systems</strong>: 40% of large planets have randomly generated ring systems with elliptical transformations</li>
+        <li><strong>Color-Coded Star Types</strong>: Jupiter orange, Saturn yellow-brown, Uranus blue, Mars red-brown - each with unique atmospheric effects</li>
+        <li><strong>Real-time 60fps Rendering</strong>: Smooth animation using Canvas 2D context with optimized rendering loops</li>
+        <li><strong>Responsive Universe</strong>: Starfield adapts to any screen size, orientation, and device capabilities</li>
+        <li><strong>Flickering Star Effects</strong>: Smaller stars have subtle twinkling using sine wave functions</li>
+      </ul>
+      
+      <h3 id="code-implementation">💻 Key Technical Implementation</h3>
+      <p>Here are the core algorithms that bring this procedural universe to life:</p>
+      
+      <h4>🌟 Procedural Star Generation</h4>
+      <p>The heart of the system - each star is generated with unique properties using mathematical randomness. The algorithm creates a realistic distribution where most objects are small stars, with occasional large planetary bodies that have atmospheric effects and ring systems.</p>
+      <pre><code>// Generate 400 procedural stars with varied properties
+stars = Array.from({length: 400}, () => {
+  const size = Math.random() * 2;
+  const isLargePlanet = size > 1.8 && Math.random() < 0.3;
+  const hasRings = isLargePlanet && Math.random() < 0.4;
+  
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: isLargePlanet ? size : size * 0.8,
+    speed: Math.random() * 0.5 + 0.2,
+    initialColor: baseColors[Math.floor(Math.random() * baseColors.length)],
+    hasRings: hasRings,
+    ringAngle: hasRings ? Math.random() * Math.PI * 2 : 0
+  };
+});</code></pre>
+      
+      <h4>🌌 Parallax Depth System</h4>
+      <p>This creates the illusion of 3D depth by making smaller stars move faster than larger ones. The mathematical relationship <code>sizeFactor = 1 / (s.size + 0.5)</code> ensures that distant stars (smaller) move faster, while nearby planets (larger) move slower, mimicking real-world perspective.</p>
+      <pre><code>// Parallax movement - smaller stars move faster for depth effect
+stars.forEach(s => {
+  const sizeFactor = 1 / (s.size + 0.5); // Smaller stars = faster movement
+  s.x += s.speed * sizeFactor * 0.3;
+  s.y += s.speed * sizeFactor * 0.15;
+  
+  // Seamless boundary wrapping
+  if (s.x < 0) s.x = canvas.width;
+  if (s.x > canvas.width) s.x = 0;
+});</code></pre>
+      
+      <h4>🪐 Atmospheric Rendering</h4>
+      <p>Large celestial bodies are rendered with realistic atmospheric effects using radial gradients. The gradient creates a soft glow that extends beyond the planet's surface, simulating atmospheric scattering of light. Each planet type has its own color palette based on real astronomical observations.</p>
+      <pre><code>// Create atmospheric glow using radial gradients
+const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.size * 8);
+gradient.addColorStop(0, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.9)`);
+gradient.addColorStop(0.3, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.8)`);
+gradient.addColorStop(0.6, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.6)`);
+gradient.addColorStop(1, 'rgba(0, 0, 0, 0)'); // Fade to transparent
+
+ctx.fillStyle = gradient;
+ctx.beginPath();
+ctx.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2);
+ctx.fill();</code></pre>
+      
+      <h4>💫 Twinkling Animation</h4>
+      <p>Smaller stars have a subtle twinkling effect achieved through sine wave functions. The <code>Math.sin(Date.now() * s.speed * 0.005)</code> creates a smooth, time-based oscillation that varies the star's opacity and creates the classic "twinkling star" effect seen in real night skies.</p>
+      <pre><code>// Add twinkling effect using sine wave functions
+const flicker = s.size <= 1.8 ? Math.sin(Date.now() * s.speed * 0.005) * 0.7 + 0.8 : 1;
+const alpha = 0.5 + flicker * 0.5;
+
+ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+ctx.beginPath();
+ctx.arc(s.x, s.y, s.size * 0.4, 0, Math.PI * 2);
+ctx.fill();</code></pre>
+      
+      <h3 id="web-design-philosophy">Web Design Philosophy</h3>
+      <p>This webpage demonstrates how procedural generation concepts can be applied beyond game development:</p>
+      <ul>
+        <li><strong>Interactive Documentation</strong>: The webpage itself becomes part of the project demonstration</li>
+        <li><strong>Visual Consistency</strong>: The space theme connects the Unity project with its documentation</li>
+        <li><strong>Performance Optimization</strong>: Efficient Canvas rendering ensures smooth animation on all devices</li>
+        <li><strong>Responsive Typography</strong>: Jersey 25 font with carefully tuned letter-spacing for optimal readability</li>
+        <li><strong>Animated Elements</strong>: Typewriter effects, twinkling stars, and smooth transitions enhance user experience</li>
+        <li><strong>Accessibility</strong>: High contrast colors and scalable text ensure content is accessible to all users</li>
+      </ul>
+      
+      <h3 id="conclusion">Conclusion</h3>
+      <p>From Unity's procedural planet generation to this webpage's procedural starfield, the journey demonstrates how mathematical algorithms can create beautiful, dynamic content across different platforms. The same principles of randomness, layering, and real-time generation that power the Unity project also bring this documentation to life.</p>
+      
+      <p><strong>Thank you for exploring this procedural universe with me! 🌌✨</strong></p>
+  </div>
+
+  <script>
+    // 打字机效果
+    function typeWriter(element, text, speed = 100) {
+      let i = 0;
+      element.innerHTML = '';
+      
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+    
+    // 页面加载完成后开始打字机效果
+    window.addEventListener('load', function() {
+      const titleElement = document.getElementById('main-title');
+      const subtitleElement = document.getElementById('main-subtitle');
+      
+      // 先打主标题
+      typeWriter(titleElement, 'Procedural Planet', 75);
+      
+      // 主标题完成后开始打副标题
+      setTimeout(() => {
+        typeWriter(subtitleElement, 'Creating Infinite Universe with Unity 6', 80);
+      }, 2500);
+    });
+
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const baseColors = [
+        [255, 180, 120], // 木星橙色
+        [200, 160, 100], // 土星黄褐色
+        [180, 220, 255], // 天王星蓝色
+        [200, 150, 150]  // 火星红褐色
+      ];
+      
+              stars = Array.from({length: 400}, () => {
+          const size = Math.random() * 2;
+          // 减少大行星数量：只有1/8的星星会成为大行星（原来是1/4）
+          const isLargePlanet = size > 1.8 && Math.random() < 0.3;
+          const finalSize = isLargePlanet ? size : size * 0.8; // 减小普通星星的尺寸
+          
+          // 在初始化时确定光环属性
+          const hasRings = isLargePlanet && Math.random() < 0.4; // 20%的大行星有光环
+          const ringAngle = hasRings ? Math.random() * Math.PI * 2 : 0; // 随机倾斜角度
+          
+          return {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: finalSize,
+            speed: Math.random() * 0.5 + 0.2,
+            initialColor: baseColors[Math.floor(Math.random() * baseColors.length)],
+            hasRings: hasRings,
+            ringAngle: ringAngle
+          };
+        });
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+      
+      stars.forEach(s => {
+        // 闪烁效果 - 只对普通星星应用
+        const flicker = s.size <= 1.8 ? Math.sin(Date.now() * s.speed * 0.005) * 0.7 + 0.8 : 1;
+        const alpha = 0.5 + flicker * 0.5;
+        
+        // 星星移动 - 越小的星星移动越快（视差效果）
+        const sizeFactor = 1 / (s.size + 0.5); // 小星星速度更快
+        s.x += s.speed * sizeFactor * 0.3;
+        s.y += s.speed * sizeFactor * 0.15;
+
+        
+        
+        // 根据大小区分普通星星和大星球 (调整阈值使大星星数量减少到1/4)
+        if(s.size > 1.8) {
+          // 绘制类似木星的大行星，使用预定义的颜色
+          const baseColor = s.initialColor;
+          
+          // 创建径向渐变作为基础
+          const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.size * 8);
+          
+          // 构建基础渐变层次
+          gradient.addColorStop(0, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.9)`);
+          gradient.addColorStop(0.3, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.8)`);
+          gradient.addColorStop(0.6, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0.6)`);
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          
+          // 绘制基础行星
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // 添加木星风格的条纹效果
+          const stripeCount = 3;
+          for (let i = 0; i < stripeCount; i++) {
+            const stripeY = s.y - s.size * 2 + (i * s.size * 1.5);
+            const stripeHeight = s.size * 0.3;
+            const stripeWidth = s.size * 4;
+            
+            // 条纹颜色稍微深一些
+            const stripeColor = [
+              Math.max(0, baseColor[0] - 30),
+              Math.max(0, baseColor[1] - 20),
+              Math.max(0, baseColor[2] - 15)
+            ];
+            
+            ctx.fillStyle = `rgba(${stripeColor[0]}, ${stripeColor[1]}, ${stripeColor[2]}, 0.7)`;
+            ctx.fillRect(s.x - stripeWidth/2, stripeY, stripeWidth, stripeHeight);
+          }
+          
+          // 添加漩涡效果（小的圆形渐变）
+          const swirlCount = 2;
+          for (let i = 0; i < swirlCount; i++) {
+            const swirlX = s.x - s.size * 1.5 + (i * s.size * 2);
+            const swirlY = s.y + s.size * 0.5;
+            const swirlSize = s.size * 0.8;
+            
+            // 漩涡颜色稍微亮一些
+            const swirlColor = [
+              Math.min(255, baseColor[0] + 20),
+              Math.min(255, baseColor[1] + 15),
+              Math.min(255, baseColor[2] + 10)
+            ];
+            
+            const swirlGradient = ctx.createRadialGradient(swirlX, swirlY, 0, swirlX, swirlY, swirlSize);
+            swirlGradient.addColorStop(0, `rgba(${swirlColor[0]}, ${swirlColor[1]}, ${swirlColor[2]}, 0.6)`);
+            swirlGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = swirlGradient;
+            ctx.beginPath();
+            ctx.arc(swirlX, swirlY, swirlSize, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          
+          if (s.hasRings) {
+            // 绘制光环
+            const ringOuterRadius = s.size * 5;
+            const ringInnerRadius = s.size * 2.5;
+            const ringThickness = s.size * 0.8;
+            
+            // 光环颜色（基于行星颜色但稍微偏黄）
+            const ringColor = [
+              Math.min(255, baseColor[0] + 40),
+              Math.min(255, baseColor[1] + 30),
+              Math.min(255, baseColor[2] + 20)
+            ];
+            
+            // 创建光环的椭圆形状（模拟透视效果）
+            ctx.save();
+            ctx.translate(s.x, s.y);
+            ctx.rotate(s.ringAngle); // 应用随机的倾斜角度
+            ctx.scale(1, 0.3); // 压扁椭圆，模拟光环的透视效果
+            
+            // 绘制外环
+            const outerGradient = ctx.createRadialGradient(0, 0, ringInnerRadius, 0, 0, ringOuterRadius);
+            outerGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+            outerGradient.addColorStop(0.3, `rgba(${ringColor[0]}, ${ringColor[1]}, ${ringColor[2]}, 0.4)`);
+            outerGradient.addColorStop(0.7, `rgba(${ringColor[0]}, ${ringColor[1]}, ${ringColor[2]}, 0.6)`);
+            outerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = outerGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, ringOuterRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 绘制内环（稍微亮一些）
+            const innerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, ringInnerRadius);
+            innerGradient.addColorStop(0, `rgba(${ringColor[0]}, ${ringColor[1]}, ${ringColor[2]}, 0.8)`);
+            innerGradient.addColorStop(0.5, `rgba(${ringColor[0]}, ${ringColor[1]}, ${ringColor[2]}, 0.6)`);
+            innerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = innerGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, ringInnerRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+          }
+        } else {
+          // 绘制普通星星 (数量增加到1.5倍，通过降低size阈值实现)
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size * 0.4, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // 十字形光芒
+          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.3})`;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(s.x - s.size, s.y);
+          ctx.lineTo(s.x + s.size, s.y);
+          ctx.moveTo(s.x, s.y - s.size);
+          ctx.lineTo(s.x, s.y + s.size);
+          ctx.stroke();
+        }
+        
+        // 保持在画布范围内
+        if (s.x < 0) s.x = canvas.width;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.y < 0) s.y = canvas.height;
+        if (s.y > canvas.height) s.y = 0;
+      });
+      
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+  </script>
+</body>
+</html>
