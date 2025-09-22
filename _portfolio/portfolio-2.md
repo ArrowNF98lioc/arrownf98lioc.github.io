@@ -1,6 +1,6 @@
 ---
 title: "CS 184"
-excerpt: "Completed the course with grade A<br/><img src='/CS184WriteUps/hw2/images/problem_4_base_photo.png'>"
+excerpt: "From rasterization to path tracing—hands on<br/><img src='/CS184WriteUps/hw2/images/problem_4_base_photo.png'>"
 collection: portfolio
 ---
 CS184 Write-Ups:
