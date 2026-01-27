@@ -1,6 +1,6 @@
 ---
 title: "Research & Seminars"
-excerpt: "A small collection of my seminar notes, academic talk slides, and course research writing.  <br/><img src='gestalt.png'>"
+excerpt: "A small collection of my seminar notes, academic talk slides, and course research writing.  <br/><img src='/gestalt.png'>"
 collection: portfolio
 ---
 ## Academic Talk
