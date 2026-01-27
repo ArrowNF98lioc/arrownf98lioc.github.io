@@ -1,6 +1,6 @@
 ---
 title: "Machine Learning Course Report"
-excerpt: "Course report (PDF) for Semantic Segmentation for Autonomous Driving.  <br/><img src='/ml.png'>"
+excerpt: "Course report (PDF) for Semantic Segmentation for Autonomous Driving.  <br/><img src='/images/ml.png'>"
 collection: portfolio
 ---
 
