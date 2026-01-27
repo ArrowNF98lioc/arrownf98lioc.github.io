@@ -24,8 +24,3 @@ Semantic segmentation provides pixel-level understanding of driving scenes (road
 
 **Report**
 - [PDF](https://drive.google.com/file/d/1olIE0H2ovbZt3q8ALgilBHqLcclBuzZZ/view?usp=drive_link)
-
-## Citation
-If you reference this report, please cite:
-
-> Qin, Yuhe. *Machine Learning Final Report: Semantic Segmentation for Autonomous Driving*. Course report, personal website, [Year].
