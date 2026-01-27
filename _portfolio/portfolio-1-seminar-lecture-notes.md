@@ -1,3 +1,10 @@
+---
+title: "Seminar Leture Notes"
+excerpt: "My lecture notes from three seminars sessions.<br/><img src='/images/spires2024.png'>"
+collection: portfolio
+---
+
+
 # Seminar Lecture Notes
 
 This section collects my lecture notes from three seminars / reading-group sessions.  
