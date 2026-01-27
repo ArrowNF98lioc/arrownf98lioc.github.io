@@ -15,4 +15,4 @@ Professor Yifei Zhu led our research group to participate in SPIRES 2024. We pre
 
 **Materials**
 - Paper / Findings: [LINK](https://yifeizhu.github.io/tail.pdf)
-- Poster: 
+- Poster: [LINK](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://yifeizhu.github.io/tail-poster.pdf)
