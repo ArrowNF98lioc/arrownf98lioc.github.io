@@ -14,5 +14,5 @@ collection: portfolio
 Professor Yifei Zhu led our research group to participate in SPIRES 2024. We presented our findings on **topology-enhanced machine learning for speech recognition** through a poster session, sharing our work with **150+** experts and scholars from around the world.
 
 **Materials**
-- Paper / Findings: [LINK](https://yifeizhu.github.io/tail.pdf)
 - Poster: [LINK](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://yifeizhu.github.io/tail-poster.pdf)
+- Paper / Findings: [LINK](https://drive.google.com/file/d/1uXPLviXvs14wSqenO_sJGWKyXiqYWAxP/view?usp=drive_link)
