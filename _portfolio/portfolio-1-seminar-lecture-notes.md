@@ -42,11 +42,3 @@ Public links will be added soon.
 
 **Files**
 - [PDF](https://drive.google.com/file/d/1DXs32WHY4Oy7nFWKFVSuB0ijiHf4mLZA/view?usp=drive_link)
-
----
-
-## Citation
-If you reference these notes, please cite:
-
-> Qin, Yuhe. *Seminar Lecture Notes*. Personal website, [Year].  
-> (Include the specific note title.)
