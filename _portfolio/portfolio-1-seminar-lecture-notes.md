@@ -4,15 +4,6 @@ excerpt: "My lecture notes from three seminars sessions.<br/><img src='/images/s
 collection: portfolio
 ---
 
-
-# Seminar Lecture Notes
-
-This section collects my lecture notes from three seminars / reading-group sessions.  
-The notes emphasize **clean definitions**, **proof skeletons**, and **high-level intuition** that supports later work and self-review.  
-Public links will be added soon.
-
----
-
 ## 1) Set Theory Seminar Notes
 **Theme:** Axiom of Choice and equivalent formulations
 
