@@ -1,6 +1,6 @@
 ---
 title: "Seminar Leture Notes"
-excerpt: "My lecture notes from three seminars sessions.<br/><img src='/images/spires2024.png'>"
+excerpt: "My lecture notes from three seminars sessions.<br/><img src='/ec.png'>"
 collection: portfolio
 ---
 
