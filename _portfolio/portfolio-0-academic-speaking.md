@@ -2,6 +2,7 @@
 title: "Academic Talk"
 excerpt: "Slides and a short overview of one academic talk.  <br/><img src='/images/gestalt.png'>"
 collection: portfolio
+---
 
 ## How Topology Is Applied to Gestalt Principles in Auditory Perception
 **Format:** Talk slides (PPT)  
