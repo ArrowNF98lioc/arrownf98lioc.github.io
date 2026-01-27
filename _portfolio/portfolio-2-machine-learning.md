@@ -20,7 +20,7 @@ Semantic segmentation provides pixel-level understanding of driving scenes (road
   - annotation scarcity and label noise
   - class imbalance
   - multimodal fusion (optional)
-  - interpretability and reliability
+  - interpretability and reliability 
 
 **Report**
 - [PDF](https://drive.google.com/file/d/1olIE0H2ovbZt3q8ALgilBHqLcclBuzZZ/view?usp=drive_link)
